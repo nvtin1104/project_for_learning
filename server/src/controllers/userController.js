@@ -34,7 +34,44 @@ const handleGetAllUsers = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
   }
 }
+const handleDeleteUserById = async (req, res) => {
+  try {
+    const id = req.params.id
+    const result = await UsersService.deleteUserById(id)
+    res.status(StatusCodes.OK).json({
+      message: 'Deleted successfully',
+      result
+    })
+  }
+  catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+  }
+}
+const handleGetUserById = async (req, res) => {
+  try {
+    const id = req.params.id
+    const user = await UsersService.getUserById(id)
+    res.status(StatusCodes.OK).json(user)
+  }
+  catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+  }
+}
+const handleUpdateUserById = async (req, res) => {
+  try {
+    const id = req.params.id
+    const data = req.body
+    const updatedUser = await UsersService.updateUserById(id, data)
+    res.status(StatusCodes.OK).json(updatedUser)
+  }
+  catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+  }
+}
 export const UsersController = {
   handleCreateUser,
-  handleGetAllUsers
+  handleGetAllUsers,
+  handleDeleteUserById,
+  handleGetUserById,
+  handleUpdateUserById
 }
