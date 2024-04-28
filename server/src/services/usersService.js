@@ -2,6 +2,7 @@
 import { handleCreatePassword } from '~/utils/handlePassword'
 import { UserModel } from '../models/usersModel'
 import { ObjectId } from 'mongodb'
+import { createToken } from '~/middlewares/auth'
 const createUser = async (data) => {
   try {
     const existedUser = await UserModel.getUserBy(data.username, 'username')
@@ -10,6 +11,7 @@ const createUser = async (data) => {
     }
     const password = await handleCreatePassword(data.password)
     data.password = password
+    data.token = createToken(data.username)
     const newUser = await UserModel.create(data)
     return newUser
   } catch (error) {
