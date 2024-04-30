@@ -19,6 +19,6 @@ export const handleComparePassword = async (password, hash) => {
     return isMatch
   } catch (error) {
     // Handle error in a different way
-    throw new Error('Error comparing password: ' + error)
+    return false
   }
 }

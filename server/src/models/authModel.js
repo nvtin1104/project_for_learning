@@ -9,6 +9,16 @@ const getUserByUsername = async (username) => {
     throw new Error(error)
   }
 }
+const updateToken = async (username, token) => {
+  try {
+    const db = await GET_DB()
+    const update = await db.collection('users').updateOne({ username }, { $set: { token } })
+    return update
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 export const AuthModel = {
-    getUserByUsername
+  getUserByUsername,
+  updateToken
 }
