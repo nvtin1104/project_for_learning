@@ -1,19 +1,33 @@
 import { LessonsModel } from '../models/lessonsModel'
 
-const createLesson = async (data) => {
-  try {
-    const newLesson = await LessonsModel.create(data)
-    return newLesson
-  } catch (error) {
-    throw new Error(error)
+const createLesson = async (data) => await LessonsModel.create(data)
+const updateLessonById = async (id, data) => {
+  const lesson = await LessonsModel.getOneById(id)
+  if (!lesson) throw new Error('Lesson not found')
+  const lessonUpdate = await LessonsModel.update(id, data)
+  return {
+    message: 'Lesson updated',
+    lesson: lessonUpdate
   }
 }
-const getLessonsById = async (id) => await LessonsModel.getOneById(id)
-const deleteLessonById = async (id) => await LessonsModel.deleteLessonById(id)
-const getAllLessons = async () => await LessonsModel.getAll()
+const getLessonsById = async (id) => await LessonsModel.getLessonById(id)
+const deleteLessonById = async (id) => {
+  const lesson = await LessonsModel.getOneById(id)
+  if (!lesson) throw new Error('Lesson not found')
+  await LessonsModel.deleteLessonById(id)
+  return {
+    message: 'Lesson deleted'
+  }
+}
+const getAllActiveLessons = async () => await LessonsModel.getAllActiveLessons()
+const getAllLessons = async () => await LessonsModel.getAllLessons()
+const getLessonsByUserId = async (id) => await LessonsModel.getLessonsByUserId(id)
 export const LessonsService = {
   createLesson,
-  getAllLessons,
+  getAllActiveLessons,
   getLessonsById,
-  deleteLessonById
+  deleteLessonById,
+  updateLessonById,
+  getAllLessons,
+  getLessonsByUserId
 }

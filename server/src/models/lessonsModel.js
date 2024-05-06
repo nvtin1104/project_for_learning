@@ -15,9 +15,28 @@ const lessonSchema = Joi.object({
       isCorrect: Joi.boolean().required()
     })).min(2).required()
   })).min(1).required(),
+  expirationDate: Joi.date().default(null),
   createdAt: Joi.date().default(Date.now()),
   updatedAt: Joi.date().default(null),
   status: Joi.string().valid('active', 'inactive').default('active')
+})
+const lessonSchemaUpdate = Joi.object({
+  title: Joi.string().min(3).max(100),
+  auth: Joi.string().min(3).max(100),
+  authId: Joi.string().min(3).max(100),
+  description: Joi.string().min(3).max(500),
+  type: Joi.string().valid('test', 'lesson', 'memo'),
+  limit: Joi.number().min(1).max(1000),
+  questions: Joi.array().items(Joi.object({
+    question: Joi.string().min(3).max(500),
+    options: Joi.array().items(Joi.object({
+      option: Joi.string().min(1).max(500),
+      isCorrect: Joi.boolean()
+    })).min(2)
+  })).min(1),
+  expirationDate: Joi.date(),
+  updatedAt: Joi.date().default(Date.now()),
+  status: Joi.string().valid('active', 'inactive')
 })
 const create = async (data) => {
   try {
@@ -31,20 +50,50 @@ const create = async (data) => {
     throw new Error(error)
   }
 }
-const getAll = async () => {
+const update = async (id, data) => {
+  try {
+    const validData = await lessonSchemaUpdate.validateAsync(data, { abortEarly: true })
+    if (validData.authId) validData.authId = new ObjectId(validData.authId)
+    const db = await GET_DB()
+    await db.collection('lessons').updateOne({ _id: new ObjectId(id) }, { $set: validData })
+    const lesson = await db.collection('lessons').findOne({ _id: new ObjectId(id) })
+    return lesson
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+const getAllActiveLessons = async () => {
   try {
     const db = await GET_DB()
-    const lessons = await db.collection('lessons').find({status: 'active'}).toArray()
+    const lessons = await db.collection('lessons').find({ status: 'active' }).toArray()
     return lessons
   } catch (error) {
     throw new Error(error)
   }
 }
-const getOneById = async (id) => {
+const getAllLessons = async () => {
+  try {
+    const db = await GET_DB()
+    const lessons = await db.collection('lessons').find().toArray()
+    return lessons
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+const getLessonById = async (id) => {
   try {
     const db = await GET_DB()
     const lesson = await db.collection('lessons').findOne({ _id: new ObjectId(id) })
     return lesson
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+const getLessonsByUserId = async (id) => {
+  try {
+    const db = await GET_DB()
+    const lessons = await db.collection('lessons').find({ authId: new ObjectId(id) }).toArray()
+    return lessons
   } catch (error) {
     throw new Error(error)
   }
@@ -60,7 +109,10 @@ const deleteLessonById = async (id) => {
 }
 export const LessonsModel = {
   create,
-  getAll,
-  getOneById,
-  deleteLessonById
+  getAllActiveLessons,
+  getLessonById,
+  deleteLessonById,
+  getAllLessons,
+  update,
+  getLessonsByUserId
 }
