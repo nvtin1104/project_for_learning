@@ -8,6 +8,12 @@ const createLesson = async (data) => {
     throw new Error(error)
   }
 }
+const getLessonsById = async (id) => await LessonsModel.getOneById(id)
+const deleteLessonById = async (id) => await LessonsModel.deleteLessonById(id)
+const getAllLessons = async () => await LessonsModel.getAll()
 export const LessonsService = {
-  createLesson
+  createLesson,
+  getAllLessons,
+  getLessonsById,
+  deleteLessonById
 }

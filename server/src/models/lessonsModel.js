@@ -31,6 +31,36 @@ const create = async (data) => {
     throw new Error(error)
   }
 }
+const getAll = async () => {
+  try {
+    const db = await GET_DB()
+    const lessons = await db.collection('lessons').find({status: 'active'}).toArray()
+    return lessons
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+const getOneById = async (id) => {
+  try {
+    const db = await GET_DB()
+    const lesson = await db.collection('lessons').findOne({ _id: new ObjectId(id) })
+    return lesson
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+const deleteLessonById = async (id) => {
+  try {
+    const db = await GET_DB()
+    const result = await db.collection('lessons').deleteOne({ _id: new ObjectId(id) })
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 export const LessonsModel = {
-  create
+  create,
+  getAll,
+  getOneById,
+  deleteLessonById
 }

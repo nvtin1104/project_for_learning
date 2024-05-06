@@ -9,6 +9,36 @@ const handleCreateLesson = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
   }
 }
+const handleGetAllLessons = async (req, res) => {
+  try {
+    const lessons = await LessonsService.getAllLessons()
+    res.status(StatusCodes.OK).json(lessons)
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+  }
+}
+const handleGetLessonById = async (req, res) => {
+  try {
+    const {id} = req.params
+    const lesson = await LessonsService.getLessonsById(id)
+    res.status(StatusCodes.OK).json(lesson)
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+  }
+}
+const handleDeleteLessonById = async (req, res) => {
+  try {
+    const {id} = req.params
+    const lesson = await LessonsService.deleteLessonById(id)
+    res.status(StatusCodes.OK).json(lesson)
+  }
+  catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+  }
+}
 export const LessonsController = {
-  handleCreateLesson
+  handleCreateLesson,
+  handleGetAllLessons,
+  handleGetLessonById,
+  handleDeleteLessonById
 }
