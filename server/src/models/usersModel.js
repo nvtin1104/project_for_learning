@@ -12,7 +12,7 @@ const userSchema = Joi.object({
   createdAt: Joi.date().default(Date.now()),
   updatedAt: Joi.date().default(null),
   verifiedDate: Joi.date().default(null),
-  token: Joi.string(),
+  resfeshToken: Joi.string(),
   status: Joi.string().valid('active', 'inactive').default('active'),
   type: Joi.string().valid('student', 'teacher', 'parent').default('student'),
   role: Joi.string().valid('user', 'admin').default('user')
@@ -25,7 +25,7 @@ const userUpdateSchema = Joi.object({
   updatedAt: Joi.date().default(Date.now()),
   gender: Joi.string().valid('men', 'women', 'other'),
   verifiedDate: Joi.date(),
-  token: Joi.string(),
+  resfeshToken: Joi.string(),
   type: Joi.string().valid('student', 'teacher', 'parent')
 })
 

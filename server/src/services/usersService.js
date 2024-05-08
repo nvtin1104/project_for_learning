@@ -2,7 +2,7 @@
 import { handleCreatePassword } from '~/utils/handlePassword'
 import { UserModel } from '../models/usersModel'
 import { ObjectId } from 'mongodb'
-import { createToken } from '~/middlewares/auth'
+import { createResfeshToken } from '~/middlewares/auth'
 const createUser = async (data) => {
   try {
     const existedUser = await UserModel.getUserBy(data.username, 'username')
@@ -11,7 +11,8 @@ const createUser = async (data) => {
     }
     const password = await handleCreatePassword(data.password)
     data.password = password
-    data.token = createToken(data.username)
+    data.resfeshToken = createResfeshToken({ username: data.username, role: 'user' })
+
     const newUser = await UserModel.create(data)
     return newUser
   } catch (error) {

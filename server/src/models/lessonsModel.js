@@ -62,19 +62,21 @@ const update = async (id, data) => {
     throw new Error(error)
   }
 }
-const getAllActiveLessons = async () => {
+const getAllActiveLessons = async ({limit, page}) => {
   try {
+    const offset = limit * page
     const db = await GET_DB()
-    const lessons = await db.collection('lessons').find({ status: 'active' }).toArray()
+    const lessons = await db.collection('lessons').find({ status: 'active' }).limit(Number(limit)).skip(offset).toArray()
     return lessons
   } catch (error) {
     throw new Error(error)
   }
 }
-const getAllLessons = async () => {
+const getAllLessons = async ({limit, page}) => {
   try {
+    const offset = limit * page
     const db = await GET_DB()
-    const lessons = await db.collection('lessons').find().toArray()
+    const lessons = await db.collection('lessons').find().limit(Number(limit)).skip(offset).toArray()
     return lessons
   } catch (error) {
     throw new Error(error)

@@ -19,8 +19,8 @@ const deleteLessonById = async (id) => {
     message: 'Lesson deleted'
   }
 }
-const getAllActiveLessons = async () => await LessonsModel.getAllActiveLessons()
-const getAllLessons = async () => await LessonsModel.getAllLessons()
+const getAllActiveLessons = async ({ limit, page }) => await LessonsModel.getAllActiveLessons({ limit, page })
+const getAllLessons = async ({ limit, page }) => await LessonsModel.getAllLessons({ limit, page })
 const getLessonsByUserId = async (id) => await LessonsModel.getLessonsByUserId(id)
 export const LessonsService = {
   createLesson,

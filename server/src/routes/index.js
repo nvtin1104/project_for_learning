@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes'
-import { APIUsers } from './users.route';
-import { APIAuth } from './auth.route';
-import { APILessons } from './lessons.route';
-const Router = require('express').Router();
+import { APIUsers } from './users.route'
+import { APIAuth } from './auth.route'
+import { APILessons } from './lessons.route'
+const Router = require('express').Router()
 Router.get('/status', async (req, res) => {
   res.status(StatusCodes.OK).json({
     message: 'APIs are ready to use.'

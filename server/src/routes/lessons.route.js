@@ -1,7 +1,8 @@
 import express from 'express'
 import { LessonsController } from '~/controllers/lessonsController'
+import { verifyAdmin, verifyToken } from '~/middlewares/auth'
 const Router = express.Router()
-Router.post('/', LessonsController.handleCreateLesson)
+Router.post('/', verifyToken, LessonsController.handleCreateLesson)
 Router.get('/', LessonsController.handleGetAllLessons)
 Router.get('/all', LessonsController.handleGetAllActiveLessons)
 Router.get('/user/:id', LessonsController.handleGetLessonByUserId)

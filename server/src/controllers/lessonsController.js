@@ -11,7 +11,9 @@ const handleCreateLesson = async (req, res) => {
 }
 const handleGetAllLessons = async (req, res) => {
   try {
-    const lessons = await LessonsService.getAllLessons()
+    const limit = req.query.limit || 10
+    const page = req.query.page || 0
+    const lessons = await LessonsService.getAllLessons({ limit, page })
     res.status(StatusCodes.OK).json(lessons)
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
@@ -19,7 +21,7 @@ const handleGetAllLessons = async (req, res) => {
 }
 const handleGetLessonById = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params
     const lesson = await LessonsService.getLessonsById(id)
     res.status(StatusCodes.OK).json(lesson)
   } catch (error) {
@@ -28,7 +30,7 @@ const handleGetLessonById = async (req, res) => {
 }
 const handleDeleteLessonById = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params
     const lesson = await LessonsService.deleteLessonById(id)
     res.status(StatusCodes.OK).json(lesson)
   }
@@ -38,7 +40,7 @@ const handleDeleteLessonById = async (req, res) => {
 }
 const handleUpdateLessonById = async (req, res) => {
   try {
-    const { id} = req.params
+    const { id } = req.params
     if (!id) throw new Error('Id is required')
     const lesson = await LessonsService.updateLessonById(id, req.body)
     res.status(StatusCodes.OK).json(lesson)
@@ -49,7 +51,9 @@ const handleUpdateLessonById = async (req, res) => {
 }
 const handleGetAllActiveLessons = async (req, res) => {
   try {
-    const lessons = await LessonsService.getAllActiveLessons()
+    const limit = req.query.limit || 10
+    const page = req.query.page || 0
+    const lessons = await LessonsService.getAllActiveLessons({ limit, page })
     res.status(StatusCodes.OK).json(lessons)
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
