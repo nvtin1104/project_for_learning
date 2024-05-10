@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 import { StatusCodes } from 'http-status-codes'
 import { env } from '~/config/environment'
-export const createToken = ({ username, role }) => {
-  return jwt.sign({ username, role }, env.TOKEN_SECRET, {
+export const createToken = ({ username, role, userId }) => {
+  return jwt.sign({ username, role, userId }, env.TOKEN_SECRET, {
     expiresIn: 60 * 60 * 24
   })
 }

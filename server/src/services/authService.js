@@ -10,7 +10,7 @@ const login = async (data) => {
   const isMatch = await handleComparePassword(data.password, user.password)
   if (isMatch) {
     const resfeshToken = createResfeshToken({ username: user.username, role: user.role })
-    const accssesToken = createToken({ username: user.username, role: user.role })
+    const accssesToken = createToken({ username: user.username, role: user.role, userId: user._id})
     const update = await AuthModel.updateToken(data.username, resfeshToken)
     if (!update) {
       throw new Error('Error updating token')

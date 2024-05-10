@@ -14,7 +14,7 @@ const lessonSchema = Joi.object({
       option: Joi.string().min(1).max(500).required(),
       isCorrect: Joi.boolean().required()
     })).min(2).required()
-  })).min(1).required(),
+  })).min(1).max(60).required(),
   expirationDate: Joi.date().default(null),
   createdAt: Joi.date().default(Date.now()),
   updatedAt: Joi.date().default(null),
