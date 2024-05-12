@@ -6,6 +6,10 @@ const lessonSchema = Joi.object({
   auth: Joi.string().min(3).max(100).required(),
   authId: Joi.string().min(3).max(100).required(),
   description: Joi.string().min(3).max(500).required(),
+  category: Joi.object({
+    topicId: Joi.string().min(3).max(100).required(),
+    subject: Joi.string().min(3).max(100).required()
+  }).required(),
   type: Joi.string().valid('test', 'lesson', 'memo').required(),
   limit: Joi.number().min(1).max(1000).required(),
   questions: Joi.array().items(Joi.object({
@@ -26,6 +30,10 @@ const lessonSchemaUpdate = Joi.object({
   authId: Joi.string().min(3).max(100),
   description: Joi.string().min(3).max(500),
   type: Joi.string().valid('test', 'lesson', 'memo'),
+  category: Joi.object({
+    topicId: Joi.string().min(3).max(100).required(),
+    subject: Joi.string().min(3).max(100).required()
+  }),
   limit: Joi.number().min(1).max(1000),
   questions: Joi.array().items(Joi.object({
     question: Joi.string().min(3).max(500),
