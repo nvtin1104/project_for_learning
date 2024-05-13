@@ -102,7 +102,7 @@ const  MainLayout = (props) =>{
           {drawer}
         </Drawer>
       </nav>
-      <Box component="main" sx={{ p: 3 }}>
+      <Box component="main" sx={{ p: 3, width: '100vw' }}>
         <Toolbar />
        <Outlet/>
        <FooterLayout/>
