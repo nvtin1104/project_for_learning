@@ -12,6 +12,7 @@ const RootRouter = () => {
           />
           <Route path="topic" element={<TopicPage/>} />
         </Route>
+        <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     );
   }
