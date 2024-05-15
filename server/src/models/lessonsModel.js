@@ -70,17 +70,27 @@ const update = async (id, data) => {
     throw new Error(error)
   }
 }
-const getAllActiveLessons = async ({limit, page}) => {
+const getAllActiveLessons = async ({ limit, page, topicId }) => {
   try {
-    const offset = limit * page
+    const offset = limit * (page -1)
     const db = await GET_DB()
+    let maxPage = 0
+    if (topicId) {
+      const count = await db.collection('lessons').countDocuments({ status: 'active', 'category.topicId': topicId })
+      maxPage = Math.ceil(count / limit)
+      const lessons = await db.collection('lessons').find({ status: 'active', 'category.topicId': topicId }).limit(Number(limit)).skip(offset).toArray()
+      if (lessons.length == 0) throw new Error('No lessons found')
+      return { lessons, maxPage, limit, page: Number(page) }
+    }
+    const count = await db.collection('lessons').countDocuments({ status: 'active' })
+    maxPage = Math.ceil(count / limit)
     const lessons = await db.collection('lessons').find({ status: 'active' }).limit(Number(limit)).skip(offset).toArray()
-    return lessons
+    return { lessons, maxPage, limit, page: Number(page) }
   } catch (error) {
     throw new Error(error)
   }
 }
-const getAllLessons = async ({limit, page}) => {
+const getAllLessons = async ({ limit, page }) => {
   try {
     const offset = limit * page
     const db = await GET_DB()

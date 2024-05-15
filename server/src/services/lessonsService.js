@@ -19,7 +19,7 @@ const deleteLessonById = async (id) => {
     message: 'Lesson deleted'
   }
 }
-const getAllActiveLessons = async ({ limit, page }) => await LessonsModel.getAllActiveLessons({ limit, page })
+const getAllActiveLessons = async ({ limit, page, topicId }) => await LessonsModel.getAllActiveLessons({ limit, page, topicId })
 const getAllLessons = async ({ limit, page }) => await LessonsModel.getAllLessons({ limit, page })
 const getLessonsByUserId = async (id) => await LessonsModel.getLessonsByUserId(id)
 export const LessonsService = {

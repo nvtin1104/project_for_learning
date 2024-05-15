@@ -109,9 +109,6 @@ export default function ContainerTab() {
 	const handleGetPage = (value) => {
 		dispacth(handleGetAllActiveLessons({ page: value, limit: 12 }));
 	};
-	const handleGetLesson = (id) => {
-		return lessons.find(lesson => lesson._id === id);
-	}
 	return (
 		<Box sx={{ width: '100%' }}>
 			<Box sx={{ bgcolor: '#fff' }}>
@@ -147,7 +144,7 @@ export default function ContainerTab() {
 						status === 'success' &&
 						lessons.map((lesson) => (
 							<Grid item xs={12} md={4} key={lesson._id}>
-								<CardLesson lesson={lesson} navtigateToLesson={(value) => navigate(`/lessons/${value}`, { state: {data: handleGetLesson(value)}})}/>
+								<CardLesson lesson={lesson} navtigateToLesson={(value) => navigate(value)}/>
 							</Grid>
 						))}
 					{status === 'loading' && (

@@ -3,10 +3,10 @@ import { PropTypes } from 'prop-types';
 
 const ChipCategory = ({label}) => {
     ChipCategory.propTypes = {
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     }
   return (
-    <Chip label={label} />
+    <Chip label={label || 'Label'} />
   )
 }
 

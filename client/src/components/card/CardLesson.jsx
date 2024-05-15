@@ -5,8 +5,13 @@ import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import ChipCategory from '../chip/ChipCategory';
 import ChipIcon from '../chip/ChipIcon';
+import { PropTypes } from 'prop-types';
 
-export default function CardLesson() {
+export default function CardLesson({lesson, navtigateToLesson}) {
+  CardLesson.propTypes = {
+    lesson: PropTypes.object,
+    navtigateToLesson: PropTypes.func,
+  };
 	return (
 		<Card variant="outlined" sx={{
       borderRadius: 3,
@@ -21,19 +26,22 @@ export default function CardLesson() {
         height: '4px',
         backgroundColor: 'rgb(88, 105, 252)',
       },
-    }}>
+    }}
+    onClick={() => navtigateToLesson(lesson._id)}
+    >
 			<CardContent>
 				<Typography variant='h2' sx={{ fontSize: 18 }} gutterBottom>
-					Name of the word
+					{lesson.title}
 				</Typography>
 				<Stack direction="row" spacing={1}>
-					<ChipCategory label="Category" />
+					<ChipCategory label={lesson?.category?.subject} />
+					<ChipCategory label={`${lesson?.questions.length} questions`} />
 				</Stack>
-				<Typography variant="body2">Description of the word</Typography>
+				<Typography variant="body2">{lesson.description}</Typography>
         
 			</CardContent>
-      <CardActions>
-        <ChipIcon />
+      <CardActions sx={{ float: 'right'}}>
+        <ChipIcon label={lesson.auth} />
       </CardActions>
 		</Card>
 	);

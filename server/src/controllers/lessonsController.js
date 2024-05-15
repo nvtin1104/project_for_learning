@@ -52,8 +52,9 @@ const handleUpdateLessonById = async (req, res) => {
 const handleGetAllActiveLessons = async (req, res) => {
   try {
     const limit = req.query.limit || 10
-    const page = req.query.page || 0
-    const lessons = await LessonsService.getAllActiveLessons({ limit, page })
+    const page = req.query.page || 1
+    const topicId = req.query?.topicId
+    const lessons = await LessonsService.getAllActiveLessons({ limit, page, topicId })
     res.status(StatusCodes.OK).json(lessons)
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })

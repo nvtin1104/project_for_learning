@@ -1,9 +1,9 @@
 import './style.css';
 import { PropTypes } from 'prop-types';
 
-const PaginationNumber = ({ number, active = false }) => {
+const PaginationNumber = ({ number, active = false, clickFunc }) => {
 	return (
-		<div className={`pagination-number ${active ? 'active' : ''}`}>
+		<div className={`pagination-number ${active ? 'active' : ''}`} onClick={()=> clickFunc(number)}>
 			{number}
 		</div>
 	);
@@ -12,6 +12,7 @@ const PaginationNumber = ({ number, active = false }) => {
 PaginationNumber.propTypes = {
 	number: PropTypes.number.isRequired,
 	active: PropTypes.bool,
+	clickFunc: PropTypes.func,
 };
 
 export default PaginationNumber;

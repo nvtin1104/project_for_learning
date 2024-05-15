@@ -23,10 +23,12 @@ export default function App() {
   
     return (
       <ColorModeContext.Provider value={colorMode}>
-              <Provider store={store}></Provider>
-        <ThemeProvider theme={theme}>
+              <Provider store={store}>
+              <ThemeProvider theme={theme}>
             <RootRouter />
         </ThemeProvider>
+              </Provider>
+    
       </ColorModeContext.Provider>
     );
   }

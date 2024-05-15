@@ -97,7 +97,7 @@ const MainLayout = (props) => {
 						))}
 					</Box>
 					<SearchAppBar />
-					<AvatarBox />
+					<AvatarBox/>
 					<IconButton aria-label="Mode" onClick={colorMode.toggleColorMode}>
             {theme.palette.mode === 'dark' ? <MdModeNight /> : <MdOutlineLightMode />}
 					</IconButton>
