@@ -1,19 +1,23 @@
-import { amber, deepOrange, grey } from '@mui/material/colors';
+import {  amber, grey } from '@mui/material/colors';
 export const getDesignTokens = (mode) => ({
     palette: {
         mode,
         primary: {
-            ...amber,
-            ...(mode === 'dark' && {
-                main: amber[300],
-            }),
+            main: (mode === 'light' ? '#0A092D' : '#fff')
+          },
+        background: {
+            ...(mode === 'light'
+                ? {
+                    bg: grey[50],
+                    primary: grey[900],
+                    secondary: grey[800],
+                }
+                : {
+                    bg: '#0A092D',
+                    primary: '#fff',
+                    secondary: grey[500],
+                }),
         },
-        ...(mode === 'dark' && {
-            background: {
-                // default: deepOrange[900],
-                // paper: deepOrange[900],
-            },
-        }),
         text: {
             ...(mode === 'light'
                 ? {

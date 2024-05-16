@@ -8,6 +8,7 @@ import ChipCategory from '../../../components/chip/ChipCategory';
 import ChipIcon from '../../../components/chip/ChipIcon';
 import { FaRegNoteSticky } from 'react-icons/fa6';
 import { FaPaperclip } from 'react-icons/fa';
+import RadioQuestion from '../../../components/radio/RadioQuestion';
 export default function LessonDetailView() {
 	const [data, setData] = useState(null);
 	const [questions, setQuestions] = useState([]);
@@ -16,17 +17,19 @@ export default function LessonDetailView() {
 		if (state) {
 			setData(state.data);
 			setQuestions(state.data.questions);
-      console.log(state.data.questions);
+			console.log(state.data.questions);
 		} else {
 			alert('Not found');
 		}
 	}, [state]);
+	const handleFormSubmit = (e) => {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+		const data = Object.fromEntries(formData);
+		console.log(data);
+	}
 	return (
-		<Container
-			sx={{
-				height: '100vh',
-			}}
-		>
+		<Container>
 			{data !== null && (
 				<>
 					<BreadcrumbLesson label={data.title} />
@@ -90,6 +93,20 @@ export default function LessonDetailView() {
 				>
 					Question in lesson ({questions.length} questions)
 				</Typography>
+				{questions.length > 0 && (
+					<form onSubmit={handleFormSubmit}>
+						{questions.map((question, index) => (
+							<RadioQuestion
+								key={index}
+								question={question}
+								index={index}
+							/>
+						))}
+						<Button variant="contained" color="primary"  type='submit'size="large">
+							Submit
+						</Button>
+					</form>
+				)}
 			</Box>
 		</Container>
 	);

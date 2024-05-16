@@ -27,7 +27,7 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
 		},
 		fontWeight: theme.typography.fontWeightRegular,
 		marginRight: theme.spacing(1),
-		color: 'rgba(0, 0, 0, 0.85)',
+		color: 'rinhertit',
 		fontFamily: [
 			'-apple-system',
 			'BlinkMacSystemFont',
@@ -114,7 +114,7 @@ export default function ContainerTab() {
 	}
 	return (
 		<Box sx={{ width: '100%' }}>
-			<Box sx={{ bgcolor: '#fff' }}>
+			<Box>
 				<AntTabs
 					value={value}
 					onChange={handleChange}

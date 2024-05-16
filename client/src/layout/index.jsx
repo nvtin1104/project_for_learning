@@ -21,7 +21,7 @@ import AvatarBox from './common/avatar';
 import FooterLayout from './common/footer';
 import { navItems } from './config-layout';
 import { MdOutlineLightMode } from 'react-icons/md';
-import { MdModeNight } from "react-icons/md";
+import { MdModeNight } from 'react-icons/md';
 import { useTheme } from '@emotion/react';
 import { ColorModeContext } from '../app';
 const drawerWidth = 240;
@@ -57,8 +57,8 @@ const MainLayout = (props) => {
 
 	const container =
 		window !== undefined ? () => window().document.body : undefined;
-    const theme = useTheme();
-    const colorMode = React.useContext(ColorModeContext);
+	const theme = useTheme();
+	const colorMode = React.useContext(ColorModeContext);
 	return (
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
@@ -97,9 +97,13 @@ const MainLayout = (props) => {
 						))}
 					</Box>
 					<SearchAppBar />
-					<AvatarBox/>
+					<AvatarBox />
 					<IconButton aria-label="Mode" onClick={colorMode.toggleColorMode}>
-            {theme.palette.mode === 'dark' ? <MdModeNight /> : <MdOutlineLightMode />}
+						{theme.palette.mode === 'dark' ? (
+							<MdModeNight />
+						) : (
+							<MdOutlineLightMode />
+						)}
 					</IconButton>
 				</Toolbar>
 			</AppBar>
@@ -123,7 +127,14 @@ const MainLayout = (props) => {
 					{drawer}
 				</Drawer>
 			</nav>
-			<Box component="main" sx={{ p: 3, width: '100vw' }}>
+			<Box
+				component="main"
+				sx={{
+					p: 3,
+					width: '100vw',
+					backgroundColor: theme.palette.background.bg,
+				}}
+			>
 				<Toolbar />
 				<Outlet />
 				<FooterLayout />
