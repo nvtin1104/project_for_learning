@@ -12,6 +12,7 @@ import RadioQuestion from '../../../components/radio/RadioQuestion';
 export default function LessonDetailView() {
 	const [data, setData] = useState(null);
 	const [questions, setQuestions] = useState([]);
+	const [answer, setAnswer] = useState([]);
 	const { state } = useLocation();
 	useEffect(() => {
 		if (state) {
@@ -22,12 +23,31 @@ export default function LessonDetailView() {
 			alert('Not found');
 		}
 	}, [state]);
-	const handleFormSubmit = (e) => {
-		e.preventDefault();
-		const formData = new FormData(e.target);
-		const data = Object.fromEntries(formData);
-		console.log(data);
-	}
+	const handleAnswer = (value) => {
+		setAnswer((prevAnswer) => {
+			// Check if the item with the same index already exists
+			const existingItemIndex = prevAnswer.findIndex(
+				(item) => item.index === value.index
+			);
+
+			if (existingItemIndex !== -1) {
+				const updatedAnswer = [...prevAnswer];
+				updatedAnswer[existingItemIndex] = value;
+				return updatedAnswer;
+			} else {
+				return [...prevAnswer, value];
+			}
+		});
+	};
+	const handleCheckAnswer = () => {
+		questions.forEach((element, index) => {
+			if(answer.find((item) => item.index === index)){
+				element = answer.find((item) => item.index === index);
+			}
+		});
+		setQuestions(questions);
+		// Log the data
+	};
 	return (
 		<Container>
 			{data !== null && (
@@ -93,20 +113,23 @@ export default function LessonDetailView() {
 				>
 					Question in lesson ({questions.length} questions)
 				</Typography>
-				{questions.length > 0 && (
-					<form onSubmit={handleFormSubmit}>
-						{questions.map((question, index) => (
-							<RadioQuestion
-								key={index}
-								question={question}
-								index={index}
-							/>
-						))}
-						<Button variant="contained" color="primary"  type='submit'size="large">
-							Submit
-						</Button>
-					</form>
-				)}
+				{questions.length > 0 &&
+					questions.map((question, index) => (
+						<RadioQuestion
+							key={index}
+							question={question}
+							index={index}
+							handleAnswer={handleAnswer}
+						/>
+					))}
+				<Button
+					variant="contained"
+					onClick={handleCheckAnswer}
+					size="large"
+					sx={{ mt: 2 }}
+				>
+					Check
+				</Button>
 			</Box>
 		</Container>
 	);

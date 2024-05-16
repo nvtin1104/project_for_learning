@@ -7,7 +7,7 @@ import FormLabel from '@mui/material/FormLabel';
 import { Card, CardContent } from '@mui/material';
 import { PropTypes } from 'prop-types';
 
-export default function RadioQuestion({ question, index }) {
+export default function RadioQuestion({ question, index, handleAnswer }) {
 	RadioQuestion.propTypes = {
 		question: PropTypes.object,
 		handleAnswer: PropTypes.func,
@@ -16,6 +16,9 @@ export default function RadioQuestion({ question, index }) {
 	const [value, setValue] = React.useState(null);
 	const handleChange = (event) => {
 		setValue(event.target.value);
+		question.answer = event.target.value;
+		question.options.find((option) => option.option === event.target.value).isCorrect ? question.checkAnswer = true : question.checkAnswer = false;
+		handleAnswer({question, index});
 	};
 
 	return (

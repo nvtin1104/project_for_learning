@@ -94,7 +94,6 @@ export default function ContainerTab() {
 	}, [dispacth, status]);
 	React.useEffect(() => {
 		if (status === 'success') {
-			console.log(data);
 			setLessons(data.lessons);
 		}
 	}, [data, status]);
