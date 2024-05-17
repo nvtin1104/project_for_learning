@@ -142,7 +142,7 @@ export default function ContainerTab() {
 					sx={{ margin: '32px 0', width: '100% !important', minHeight: '400px' }}
 				>
 
-					{lessons.length > 0 &&
+					{lessons?.length > 0 &&
 						status === 'success' &&
 						lessons.map((lesson) => (
 							<Grid item xs={12} md={4} key={lesson._id}>

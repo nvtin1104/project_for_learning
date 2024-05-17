@@ -17,6 +17,7 @@ export default function RadioQuestion({ question, index, handleAnswer }) {
 	const handleChange = (event) => {
 		setValue(event.target.value);
 		question.answer = event.target.value;
+		
 		question.options.find((option) => option.option === event.target.value).isCorrect ? question.checkAnswer = true : question.checkAnswer = false;
 		handleAnswer({question, index});
 	};

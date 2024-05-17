@@ -9,16 +9,17 @@ import ChipIcon from '../../../components/chip/ChipIcon';
 import { FaRegNoteSticky } from 'react-icons/fa6';
 import { FaPaperclip } from 'react-icons/fa';
 import RadioQuestion from '../../../components/radio/RadioQuestion';
+import CardResult from '../../../components/card/CardResult';
 export default function LessonDetailView() {
 	const [data, setData] = useState(null);
 	const [questions, setQuestions] = useState([]);
 	const [answer, setAnswer] = useState([]);
+	const [checkAnswer, setCheckAnswer] = useState(false);
 	const { state } = useLocation();
 	useEffect(() => {
 		if (state) {
 			setData(state.data);
 			setQuestions(state.data.questions);
-			console.log(state.data.questions);
 		} else {
 			alert('Not found');
 		}
@@ -46,6 +47,7 @@ export default function LessonDetailView() {
 			}
 		});
 		setQuestions(questions);
+		setCheckAnswer(true);
 		// Log the data
 	};
 	return (
@@ -113,7 +115,7 @@ export default function LessonDetailView() {
 				>
 					Question in lesson ({questions.length} questions)
 				</Typography>
-				{questions.length > 0 &&
+				{(questions.length > 0 && checkAnswer === false) ?
 					questions.map((question, index) => (
 						<RadioQuestion
 							key={index}
@@ -121,15 +123,38 @@ export default function LessonDetailView() {
 							index={index}
 							handleAnswer={handleAnswer}
 						/>
-					))}
-				<Button
-					variant="contained"
-					onClick={handleCheckAnswer}
-					size="large"
-					sx={{ mt: 2 }}
-				>
-					Check
-				</Button>
+					)): 
+					questions.map((question, index) => (
+						<CardResult
+							key={index}
+							question={question}
+						/>
+					))
+					}
+				{checkAnswer === false ? (
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={handleCheckAnswer}
+						sx={{
+							margin: '16px 0',
+						}}
+					>
+						Check Answer
+					</Button>
+				): (
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={() => setCheckAnswer(false)}
+						sx={{
+							margin: '16px 0',
+						}}
+					>
+						Reset
+					</Button>
+				)}
+
 			</Box>
 		</Container>
 	);

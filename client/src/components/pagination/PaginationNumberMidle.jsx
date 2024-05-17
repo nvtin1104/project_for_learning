@@ -24,8 +24,8 @@ const PaginationNumberMidle = ({ number, maxPage }) => {
 };
 
 PaginationNumberMidle.propTypes = {
-	number: PropTypes.number.isRequired,
-	maxPage: PropTypes.number.isRequired,
+	number: PropTypes.number,
+	maxPage: PropTypes.number,
 };
 
 export default PaginationNumberMidle;
