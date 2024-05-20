@@ -50,6 +50,11 @@ export default function LessonDetailView() {
 		setCheckAnswer(true);
 		// Log the data
 	};
+	const handleResetTest = () => {
+		setCheckAnswer(false);
+		setQuestions(data.questions);
+		setAnswer([]);
+	}
 	return (
 		<Container>
 			{data !== null && (
@@ -146,7 +151,7 @@ export default function LessonDetailView() {
 					<Button
 						variant="contained"
 						color="primary"
-						onClick={() => setCheckAnswer(false)}
+						onClick={handleResetTest}
 						sx={{
 							margin: '16px 0',
 						}}

@@ -1,6 +1,9 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { IoMdSearch } from "react-icons/io";
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { handleSearchLessons } from '../../redux/slices/searchSlice';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -44,6 +47,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+  const [search, setSearch] = useState('');
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(handleSearchLessons({ search }));
+    }, 1500);
+
+    // Cleanup function to clear the timeout if the component unmounts or search changes
+    return () => clearTimeout(timer);
+  }, [search]);
   return (
     <Search sx={{
       flexGrow: 1,
@@ -54,6 +67,8 @@ export default function SearchAppBar() {
     <StyledInputBase
       placeholder="Search…"
       inputProps={{ 'aria-label': 'search' }}
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
     />
   </Search>
   );

@@ -2,6 +2,7 @@ import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
 const lessonSchema = Joi.object({
+  _id: Joi.string().pattern(new RegExp('^[0-9a-fA-F]{24}$')),
   title: Joi.string().min(3).max(100).required(),
   auth: Joi.string().min(3).max(100).required(),
   authId: Joi.string().min(3).max(100).required(),
