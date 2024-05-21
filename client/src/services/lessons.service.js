@@ -10,7 +10,8 @@ const LessonsService = {
       return handleRequest('get', `/lessons/all?limit=${limit}&page=${page}&topicId=${topicId}`);
     }
     return handleRequest('get', `/lessons/all?limit=${limit}&page=${page}`);
-  }
+  },
+  getLessonById: (id) => handleRequest('get', `/lessons/${id}`),
 };
 
 export default LessonsService;

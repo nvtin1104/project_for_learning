@@ -10,14 +10,23 @@ async function handleRequest(request, arg, thunkAPI) {
 }
 export const handleGetAllActiveLessons = createAsyncThunk(
   'lessons/getAllActiveLessons',
-  ({page, limit, topicId}, thunkAPI) => handleRequest(LessonsService.getAllActiveLessons, {page, limit, topicId }, thunkAPI)
+  ({ page, limit, topicId }, thunkAPI) => handleRequest(LessonsService.getAllActiveLessons, { page, limit, topicId }, thunkAPI)
+);
+export const handleGetLessonsById = createAsyncThunk(
+  'search/lessonsById',
+  ({ id }, thunkAPI) => handleRequest(LessonsService.getLessonById, id, thunkAPI)
 );
 export const resetState = createAction('lessons/resetState');
 
 export const resetStatus = createAction('lessons/resetStatus');
 const lessonsSlice = createSlice({
   name: 'lessons',
-  initialState: { data: null, status: 'idle', error: null },
+  initialState: {
+    data: null,
+    status: 'idle',
+    error: null,
+    lesson: null
+  },
   reducers: {
     resetState: (state) => {
       state.error = null;
@@ -38,6 +47,16 @@ const lessonsSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(handleGetAllActiveLessons.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      }).addCase(handleGetLessonsById.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(handleGetLessonsById.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.lesson = action.payload;
+      })
+      .addCase(handleGetLessonsById.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

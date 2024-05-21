@@ -12,6 +12,7 @@ export const handleSearchLessons = createAsyncThunk(
     'search/lessons',
     ({search}, thunkAPI) => handleRequest(SearchService.searchLessons, {search}, thunkAPI)
     );
+
 export const resetState = createAction('search/resetState');
 
 export const resetStatus = createAction('search/resetStatus');
