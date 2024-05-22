@@ -1,19 +1,36 @@
 import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import { handleToast } from 'src/utils/toast';
 import { fCurrency } from 'src/utils/format-number';
 
+import { UserContext } from 'src/context/user.context';
+import { addToCart } from 'src/redux/slices/cartSlice';
+
 import Label from 'src/components/label';
-import { ColorPreview } from 'src/components/color-utils';
 
 // ----------------------------------------------------------------------
 
 export default function ShopProductCard({ product }) {
+  const dispatch = useDispatch();
+  const { login } = useContext(UserContext);
+  const user = useSelector((state) => state.users.me);
+  const handleAddToCart = (id) => {
+    if (!login) {
+      handleToast('error', 'Please login to add to cart');
+      return;
+    }
+    const data = { userId:user._id, productId: id , quantity: 1};
+    dispatch(addToCart(data));
+  };
   const renderStatus = (
     <Label
       variant="filled"
@@ -34,7 +51,7 @@ export default function ShopProductCard({ product }) {
     <Box
       component="img"
       alt={product.name}
-      src={product.cover}
+      src={product.imgs[0]}
       sx={{
         top: 0,
         width: 1,
@@ -55,7 +72,7 @@ export default function ShopProductCard({ product }) {
           textDecoration: 'line-through',
         }}
       >
-        {product.priceSale && fCurrency(product.priceSale)}
+        {/* {product.priceSale && fCurrency(product.priceSale)} */}
       </Typography>
       &nbsp;
       {fCurrency(product.price)}
@@ -76,8 +93,9 @@ export default function ShopProductCard({ product }) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={product.colors} />
+          {/* <ColorPreview colors={product.colors} /> */}
           {renderPrice}
+          <Button onClick={() => handleAddToCart(product._id)}>Add to Cart</Button>
         </Stack>
       </Stack>
     </Card>

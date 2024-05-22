@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -9,22 +10,25 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import { account } from 'src/_mock/account';
+import { handleToast } from 'src/utils/toast';
+
+import { UserContext } from 'src/context/user.context';
+import { resetAuthAction } from 'src/redux/slices/authSlice';
+import { useRouter } from 'src/routes/hooks';
+import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
     label: 'Profile',
     icon: 'eva:person-fill',
+    link: '/profile',
   },
   {
     label: 'Settings',
     icon: 'eva:settings-2-fill',
+    link: '/settings',
   },
 ];
 
@@ -32,15 +36,35 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-
+  const [user, setUser] = useState({});
+  const { setLogin } = useContext(UserContext);
+  const data = useSelector((state) => state.users.me);
+  const status = useSelector((state) => state.users.statusMe);
+  const dataLogin = useSelector((state) => state.auth.user);
+  const statusLogin = useSelector((state) => state.auth.status);
+  useEffect(() => {
+    if (status === 'success') {
+      setUser(data);
+    }
+    if (statusLogin === 'success') {
+      setUser(dataLogin);
+    }
+  }, [data, status, dataLogin, statusLogin]);
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
-
+  const dispatch = useDispatch();
+  const router = useRouter();
   const handleClose = () => {
     setOpen(null);
   };
-
+  const handleLogout = async () => {
+    await dispatch(resetAuthAction());
+    handleToast('success', 'Logout successful');
+    setLogin(false);
+    localStorage.removeItem('token');
+    router.push('/');
+  };
   return (
     <>
       <IconButton
@@ -56,15 +80,15 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={account.photoURL}
-          alt={account.displayName}
+          src={user?.avatar}
+          alt={user.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {/* {user?.name.charAt(0).toUpperCase()} */}
         </Avatar>
       </IconButton>
 
@@ -85,10 +109,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {user?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user?.email}
           </Typography>
         </Box>
 
@@ -96,7 +120,7 @@ export default function AccountPopover() {
 
         {MENU_OPTIONS.map((option) => (
           <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
+            <Link to={option.link}>{option.label}</Link>
           </MenuItem>
         ))}
 
@@ -105,7 +129,7 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout
