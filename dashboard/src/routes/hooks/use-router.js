@@ -12,7 +12,6 @@ export function useRouter() {
       forward: () => navigate(1),
       reload: () => window.location.reload(),
       push: (href) => navigate(href),
-      post: (href, data) => navigate(href, { state: data }),
       replace: (href) => navigate(href, { replace: true }),
     }),
     [navigate]
