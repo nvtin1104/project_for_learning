@@ -139,11 +139,9 @@ export default function LessonDetailView() {
 								question={question}
 								index={index}
 								handleAnswer={handleAnswer}
-							/>
-					  ))
+							/> ))
 					: questions.map((question, index) => (
-							<CardResult key={index} question={question} />
-					  ))}
+							<CardResult key={index} question={question} /> ))}
 				{checkAnswer === false ? (
 					<Button
 						variant="contained"
