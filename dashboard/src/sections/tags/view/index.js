@@ -1,1 +1,1 @@
-export { default as TagsView } from './tags-view';
+export { default as TopicsView } from './topics-view';

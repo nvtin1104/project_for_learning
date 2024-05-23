@@ -47,6 +47,17 @@ const handleDeleteUserById = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
   }
 }
+const handleGetCurrentUser = async (req, res) => {
+    try {
+        const user = req.user
+        const data = await UsersService.getUserById(user.userId)
+        res.status(StatusCodes.OK).json(data)
+    }
+    catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+    }
+
+}
 const handleGetUserById = async (req, res) => {
   try {
     const id = req.params.id
@@ -73,5 +84,6 @@ export const UsersController = {
   handleGetAllUsers,
   handleDeleteUserById,
   handleGetUserById,
-  handleUpdateUserById
+  handleUpdateUserById,
+  handleGetCurrentUser
 }

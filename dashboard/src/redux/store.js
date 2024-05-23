@@ -5,7 +5,8 @@ import cartReducer from './slices/cartSlice';
 import usersReducer from './slices/usersSlice';
 import ordersReducer from './slices/ordersSlice';
 import productsReducer from './slices/productsSlice';
-import tagsReducer from './slices/tagsSlice';
+import lessonsReducer from './slices/lessonsSlice';
+import topicsReducer from './slices/topicsSlice';
 const store = configureStore({
   reducer: {
     users: usersReducer,
@@ -13,7 +14,8 @@ const store = configureStore({
     products: productsReducer,
     cart: cartReducer,
     orders: ordersReducer,
-    tags: tagsReducer
-  }
+    lessons: lessonsReducer,
+    topics: topicsReducer,
+  },
 });
 export default store;

@@ -84,7 +84,8 @@ export default function LoginView() {
   useEffect(() => {
     if (user && status === 'success') {
       handleToast('success', 'Login successful');
-      localStorage.setItem('token', user.token);
+      localStorage.setItem('token', user.accssesToken);
+      console.log(user);
       setUser(user);
       setLogin(true);
       router.push(location?.state?.from || '/');

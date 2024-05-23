@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { deleteProduct, fetchAllProducts, resetDeleteProduct } from 'src/redux/slices/productsSlice';
+import { deleteProduct } from 'src/redux/slices/productsSlice';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -24,10 +24,11 @@ import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import { Link } from 'react-router-dom';
 import { handleToast } from 'src/utils/toast';
+import { deleteLesson, fetchAllLessons } from '../../../redux/slices/lessonsSlice';
 
 // ----------------------------------------------------------------------
 
-export default function ProductsView() {
+export default function LessonsView() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -41,25 +42,24 @@ export default function ProductsView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
 
-  const statusDel = useSelector((state) => state.products.statusDel);
-  const error = useSelector((state) => state.products.error);
+  const statusDel = useSelector((state) => state.lessons.statusDel);
+  const error = useSelector((state) => state.lessons.error);
   useEffect(() => {
     if (statusDel === 'success') {
       handleToast('success', 'Delete successful');
-      dispatch(resetDeleteProduct())
-      dispatch(fetchAllProducts()).then((res) => {
-        setProducts(res.payload);
+      // dispatch(resetDeleteProduct());
+      dispatch(fetchAllLessons({ limit: 50, page: 1 })).then((res) => {
+        setLessons(res.payload);
       });
     }
     if (error && statusDel === 'failed') {
       handleToast('error', error.message);
     }
   }, [statusDel, error, dispatch]);
-  const [products, setProducts] = useState([]);
+  const [lessons, setLessons] = useState([]);
   useEffect(() => {
-    dispatch(fetchAllProducts()).then((res) => {
-      setProducts(res.payload);
-      console.log(res.payload);
+    dispatch(fetchAllLessons({ limit: 50, page: 1 })).then((res) => {
+      setLessons(res.payload);
     });
   }, [dispatch]);
   const handleSort = (event, id) => {
@@ -72,7 +72,7 @@ export default function ProductsView() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = products.map((n) => n.name);
+      const newSelecteds = lessons.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -112,23 +112,23 @@ export default function ProductsView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: products,
+    inputData: lessons,
     comparator: getComparator(order, orderBy),
     filterName,
   });
   const handleDelete = (id) => {
-    dispatch(deleteProduct(id));
+    dispatch(deleteLesson({ id }));
   };
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Products</Typography>
+        <Typography variant="h4">Lessons</Typography>
 
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
           <Link style={{ textDecoration: 'none', color: 'inherit' }} to="add">
-            New Product
+            New Lesson
           </Link>
         </Button>
       </Stack>
@@ -146,15 +146,17 @@ export default function ProductsView() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={products.length}
+                rowCount={lessons.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'price', label: 'price' },
+                  { id: 'title', label: 'Name' },
+                  { id: 'auth', label: 'Auth' },
                   { id: 'createdAt', label: 'createdAt', align: 'center' },
+
                   { id: 'status', label: 'Status' },
+                  { id: 'type', label: 'Type' },
                   { id: '' },
                 ]}
               />
@@ -163,11 +165,12 @@ export default function ProductsView() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <UserTableRow
-                      key={row.id}
-                      name={row.name}
+                      key={row._id}
+                      id={row._id}
+                      title={row.title}
+                      type={row.type}
                       status={row.status}
-                      price={row.price}
-                      imgs={row.imgs}
+                      auth={row.auth}
                       createdAt={row.createdAt}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
@@ -177,7 +180,7 @@ export default function ProductsView() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, products.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, lessons.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -189,7 +192,7 @@ export default function ProductsView() {
         <TablePagination
           page={page}
           component="div"
-          count={products.length}
+          count={lessons.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

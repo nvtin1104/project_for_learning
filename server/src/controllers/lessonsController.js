@@ -12,7 +12,7 @@ const handleCreateLesson = async (req, res) => {
 const handleGetAllLessons = async (req, res) => {
   try {
     const limit = req.query.limit || 10
-    const page = req.query.page || 0
+    const page = req.query.page || 1
     const lessons = await LessonsService.getAllLessons({ limit, page })
     res.status(StatusCodes.OK).json(lessons)
   } catch (error) {

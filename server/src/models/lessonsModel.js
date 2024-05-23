@@ -53,8 +53,7 @@ const create = async (data) => {
     validData.authId = new ObjectId(validData.authId)
     const db = await GET_DB()
     const result = await db.collection('lessons').insertOne(validData)
-    const lesson = await db.collection('lessons').findOne({ _id: result.insertedId })
-    return lesson
+    return await db.collection('lessons').findOne({ _id: result.insertedId })
   } catch (error) {
     throw new Error(error)
   }
@@ -80,7 +79,7 @@ const getAllActiveLessons = async ({ limit, page, topicId }) => {
       const count = await db.collection('lessons').countDocuments({ status: 'active', 'category.topicId': topicId })
       maxPage = Math.ceil(count / limit)
       const lessons = await db.collection('lessons').find({ status: 'active', 'category.topicId': topicId }).limit(Number(limit)).skip(offset).toArray()
-      if (lessons.length == 0) throw new Error('No lessons found')
+      if (lessons.length === 0) throw new Error('No lessons found')
       return { lessons, maxPage, limit, page: Number(page) }
     }
     const count = await db.collection('lessons').countDocuments({ status: 'active' })
@@ -93,7 +92,7 @@ const getAllActiveLessons = async ({ limit, page, topicId }) => {
 }
 const getAllLessons = async ({ limit, page }) => {
   try {
-    const offset = limit * page
+    const offset = limit * (page - 1)
     const db = await GET_DB()
     const lessons = await db.collection('lessons').find().limit(Number(limit)).skip(offset).toArray()
     return lessons

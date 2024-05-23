@@ -5,6 +5,7 @@ const Router = express.Router()
 
 Router.post('/', UsersController.handleCreateUser)
 Router.get('/', verifyToken, UsersController.handleGetAllUsers)
+Router.get('/current', verifyToken, UsersController.handleGetCurrentUser)
 Router.delete('/:id', verifyToken, UsersController.handleDeleteUserById)
 Router.get('/:id', verifyToken, UsersController.handleGetUserById)
 Router.patch('/:id', verifyToken, UsersController.handleUpdateUserById)

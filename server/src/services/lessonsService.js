@@ -12,7 +12,7 @@ const updateLessonById = async (id, data) => {
 }
 const getLessonsById = async (id) => await LessonsModel.getLessonById(id)
 const deleteLessonById = async (id) => {
-  const lesson = await LessonsModel.getOneById(id)
+  const lesson = await LessonsModel.getLessonById(id)
   if (!lesson) throw new Error('Lesson not found')
   await LessonsModel.deleteLessonById(id)
   return {

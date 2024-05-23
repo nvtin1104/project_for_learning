@@ -13,22 +13,23 @@ import IconButton from '@mui/material/IconButton';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
   selected,
-  name,
-  imgs,
-  price,
-  role,
+  title,
+  auth,
   createdAt,
   status,
+  type,
+  id,
   handleClick,
   handleDelete,
 }) {
   const [open, setOpen] = useState(null);
-
+  const route = useRouter();
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -46,21 +47,20 @@ export default function UserTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={imgs[0]} />
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {title}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{price}</TableCell>
+        <TableCell>{auth}</TableCell>
 
         <TableCell align="center">{createdDate}</TableCell>
 
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
-
+        <TableCell>{type.toLocaleUpperCase()}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -78,15 +78,17 @@ export default function UserTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={() => route.push(`${id}`)}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
         <MenuItem
-          onClick={handleCloseMenu}
+          onClick={() => {
+            handleCloseMenu();
+            handleDelete();
+          }}
           sx={{ color: 'error.main' }}
-          onClick={() => handleDelete()}
         >
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
@@ -97,13 +99,13 @@ export default function UserTableRow({
 }
 
 UserTableRow.propTypes = {
-  imgs: PropTypes.any,
-  price: PropTypes.any,
+  auth: PropTypes.any,
   handleClick: PropTypes.func,
   createdAt: PropTypes.any,
-  name: PropTypes.any,
-  role: PropTypes.any,
+  id: PropTypes.any,
+  title: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
+  type: PropTypes.string,
   handleDelete: PropTypes.func,
 };

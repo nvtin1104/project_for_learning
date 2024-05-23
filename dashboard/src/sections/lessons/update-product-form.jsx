@@ -11,15 +11,25 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 const productSchema = yup.object().shape({
   name: yup.string().required('Name is required').max(255, 'Name is too long'),
+  description: yup.string().required('Description is required').max(255, 'Description is too long'),
+  price: yup
+    .number()
+    .required('Price is required')
+    .min(0, 'Price must be greater than 0')
+    .max(1000000, 'Price is too high'),
 });
 
-const AddTagsForm = ({ handleGetContent }) => {
-  AddTagsForm.propTypes = {
+const UpdateProductForm = ({ handleGetContent, product }) => {
+  UpdateProductForm.propTypes = {
     handleGetContent: PropTypes.func,
+    product: PropTypes.object,
   };
   const formik = useFormik({
     initialValues: {
-      name: '',
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      tags: ['sale'],
     },
     validationSchema: productSchema,
     onSubmit: (values) => {
@@ -35,7 +45,7 @@ const AddTagsForm = ({ handleGetContent }) => {
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3}>
           <Typography variant="h4" sx={{ mb: 5 }}>
-            Tags Infor
+            Product Infor
           </Typography>
           <TextField
             name="name"
@@ -55,6 +65,44 @@ const AddTagsForm = ({ handleGetContent }) => {
               {formik.errors.name}
             </p>
           )}
+          <TextField
+            name="price"
+            label="Price"
+            value={formik.values.price}
+            onChange={(event) => {
+              formik.handleChange(event);
+            }}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.price && formik.errors.price && (
+            <p
+              style={{
+                color: 'red',
+                fontSize: '12px',
+                margin: '0',
+              }}
+            >
+              {formik.errors.price}
+            </p>
+          )}
+          <TextField
+            name="description"
+            label="Description"
+            value={formik.values.description}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.description && formik.errors.description && (
+            <p
+              style={{
+                color: 'red',
+                fontSize: '12px',
+                margin: '0',
+              }}
+            >
+              {formik.errors.description}
+            </p>
+          )}
         </Stack>
 
         <LoadingButton
@@ -72,4 +120,4 @@ const AddTagsForm = ({ handleGetContent }) => {
   );
 };
 
-export default AddTagsForm;
+export default UpdateProductForm;

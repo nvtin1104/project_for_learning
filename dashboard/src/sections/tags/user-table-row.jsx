@@ -15,14 +15,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({
-  selected,
-  name,
-  createdAt,
-  status,
-  handleClick,
-  handleDelete,
-}) {
+export default function UserTableRow({ selected, name, createdAt, handleClick, handleDelete }) {
   const [open, setOpen] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -48,12 +41,7 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-
         <TableCell align="center">{createdDate}</TableCell>
-
-        <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
-        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -97,6 +85,5 @@ UserTableRow.propTypes = {
   createdAt: PropTypes.any,
   name: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
   handleDelete: PropTypes.func,
 };
