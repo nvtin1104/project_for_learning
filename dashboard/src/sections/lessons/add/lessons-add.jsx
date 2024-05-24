@@ -7,44 +7,40 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import AddProductForm from '../add-product-form';
 import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddQuestion from '../add-question';
 import { handleToast } from 'src/utils/toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProduct, resetCreateProduct } from 'src/redux/slices/productsSlice';
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Button from '@mui/material/Button';
+import Iconify from '../../../components/iconify';
 // ----------------------------------------------------------------------
 
 export default function LessonsAdd() {
   const dispatch = useDispatch();
+  const [question, setQuestion] = useState([]);
+  const dispach = useDispatch();
+  // useEffect(() => {
+  //   if (statusCreate === 'success') {
+  //     handleToast('success', 'Create successful');
+  //     setQuestion([]);
+  //   }
+  // }
   const handleGetContent = (content) => {
-    if (imgs.length === 0) {
-      handleToast('error', 'Please add image');
-      return;
-    }
-    content.imgs = imgs;
-    dispatch(createProduct(content));
+    console.log(content);
   };
-  const status = useSelector((state) => state.products.statusCreate);
-  const error = useSelector((state) => state.products.error);
-  useEffect(() => {
-    if (status === 'success') {
-      handleToast('success', 'Create product successful');
-    }
-    if (error) {
-      handleToast('error', error.message);
-    }
-    dispatch(resetCreateProduct());
-  }, [status, error, dispatch]);
-  const [imgs, setImgs] = useState(['https://source.unsplash.com/1600x900/?product']);
-  const handleAddImg = (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const value = Object.fromEntries(data.entries());
-    setImgs([...imgs, value.img]);
+  const handleDeleteQuestion = (i) => {
+    const newQuestion = question.filter((item, index) => i !== index);
+    setQuestion(newQuestion);
   };
-  const handleDeleteImg = (index) => {
-    const newImgs = imgs.filter((img, i) => i !== index);
-    setImgs(newImgs);
+
+  const handleAddQuestion = (values) => {
+    const newQuestion = [...question, values];
+    setQuestion(newQuestion);
   };
   return (
     <Container maxWidth="xl">
@@ -54,10 +50,52 @@ export default function LessonsAdd() {
 
       <Grid container spacing={3}>
         <Grid xs={12} md={12} lg={7}>
-          <AddProductForm handleGetContent={handleGetContent} />
+          <Stack spacing={2}>
+            <AddProductForm handleGetContent={handleGetContent} />
+            <Card
+              sx={{
+                p: 3,
+              }}
+            >
+              {question.length > 0 ? (
+                question.map((item, index) => (
+                  <Accordion key={index}>
+                    <AccordionSummary
+                      expandIcon={<Iconify icon="ic:sharp-expand-more" />}
+                      aria-controls={`panel1a-content-${index}`}
+                      id={`panel1a-header-${index}`}
+                    >
+                      <Typography>{item.question}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack
+                        spacing={2}
+                        sx={{
+                          pl: 3,
+                        }}
+                      >
+                        {item.options.map((option, index) => (
+                          <Typography key={index} fontSize={12}>
+                            {option.option} {option.isCorrect && ' (Correct)'}
+                          </Typography>
+                        ))}
+                      </Stack>
+                    </AccordionDetails>
+                    <AccordionActions>
+                      <Button size="small" onClick={() => handleDeleteQuestion(index)}>
+                        Delete
+                      </Button>
+                    </AccordionActions>
+                  </Accordion>
+                ))
+              ) : (
+                <Typography>No question</Typography>
+              )}
+            </Card>
+          </Stack>
         </Grid>
         <Grid xs={12} md={12} lg={5}>
-          <AddQuestion />
+          <AddQuestion handleAddQuestion={handleAddQuestion} />
         </Grid>
       </Grid>
     </Container>

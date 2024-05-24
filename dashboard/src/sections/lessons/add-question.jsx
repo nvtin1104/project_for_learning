@@ -12,7 +12,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-
+import { handleToast } from '../../utils/toast';
+import PropTypes from 'prop-types';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,13 +25,25 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-export default function AddQuestion() {
+export default function AddQuestion({ handleAddQuestion }) {
+  AddQuestion.propTypes = {
+    handleAddQuestion: PropTypes.func,
+  };
   const [otion, setOption] = React.useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
     const value = Object.fromEntries(data.entries());
-    console.log(value);
+    const newOption = otion.map((item) =>
+      item.option === value.right ? { ...item, isCorrect: true } : item
+    );
+    if (value.right === undefined) {
+      handleToast('error', 'Right option is required');
+    } else {
+      setOption([]);
+      e.target.reset();
+      handleAddQuestion({ question: value.question, options: newOption });
+    }
   };
 
   const [open, setOpen] = React.useState(false);
@@ -40,9 +53,14 @@ export default function AddQuestion() {
     e.preventDefault();
     const data = new FormData(e.target);
     const value = Object.fromEntries(data.entries());
-    console.log(value);
-    console.log(otion);
-    setOption([...otion, { option: value.option, isCorrect: false }]);
+    const fillter = otion.filter((item) => item.option === value.option);
+    if (fillter.length > 0) {
+      handleToast('error', 'Option is exist');
+    } else if (value.option === '') {
+      handleToast('error', 'Option is required');
+    } else {
+      setOption([...otion, { option: value.option, isCorrect: false }]);
+    }
     handleClose();
   };
   return (
@@ -70,11 +88,7 @@ export default function AddQuestion() {
           </Grid>
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Options</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-            >
+            <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="right">
               {otion.map((item, i) => (
                 <FormControlLabel
                   key={i}
