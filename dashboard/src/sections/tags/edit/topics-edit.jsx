@@ -6,16 +6,18 @@ import Container from '@mui/material/Container';
 
 import Typography from '@mui/material/Typography';
 
-import { createTopic, resetCreate } from 'src/redux/slices/topicsSlice';
+import { createTopic, getTopicById, resetCreate } from 'src/redux/slices/topicsSlice';
 import { handleToast } from 'src/utils/toast';
-import AddTopicForm from '../add-topic-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import EditTopicForm from '../edit-topic-form';
 
 // ----------------------------------------------------------------------
 
-export default function TopicsAddView() {
+export default function TopicEditView() {
   const dispatch = useDispatch();
-
+  const [topic, setTopic] = useState({});
+  const { id } = useParams();
   const handleGetContent = (content) => {
     dispatch(createTopic(content));
   };
@@ -31,7 +33,8 @@ export default function TopicsAddView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Topics</Typography>
       </Stack>
-      <AddTopicForm handleGetContent={handleGetContent} />
+
+      <EditTopicForm handleGetContent={handleGetContent} />
     </Container>
   );
 }

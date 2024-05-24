@@ -15,7 +15,14 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({ selected, name, createdAt, handleClick, handleDelete }) {
+export default function UserTableRow({
+  selected,
+  name,
+  createdAt,
+  handleClick,
+  handleDelete,
+  handleNavigate,
+}) {
   const [open, setOpen] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -60,7 +67,12 @@ export default function UserTableRow({ selected, name, createdAt, handleClick, h
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem
+          onClick={() => {
+            handleNavigate();
+            handleCloseMenu();
+          }}
+        >
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
@@ -86,4 +98,5 @@ UserTableRow.propTypes = {
   name: PropTypes.any,
   selected: PropTypes.any,
   handleDelete: PropTypes.func,
+  handleNavigate: PropTypes.func,
 };

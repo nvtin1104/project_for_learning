@@ -3,7 +3,9 @@ import { LessonsService } from '~/services/lessonsService'
 
 const handleCreateLesson = async (req, res) => {
   try {
-    const lesson = await LessonsService.createLesson(req.body)
+    const data = req.body;
+    data.authId = req.user.userId;
+    const lesson = await LessonsService.createLesson(data)
     res.status(StatusCodes.CREATED).json(lesson)
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })

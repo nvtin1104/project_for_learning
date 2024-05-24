@@ -12,7 +12,7 @@ import TablePagination from '@mui/material/TablePagination';
 
 import { handleToast } from 'src/utils/toast';
 
-import { createTag, deleteTopic, getAllTopics, resetDel } from 'src/redux/slices/topicsSlice';
+import { deleteTopic, getAllTopics, resetCreate, resetDel } from 'src/redux/slices/topicsSlice';
 
 import Scrollbar from 'src/components/scrollbar';
 
@@ -24,7 +24,7 @@ import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import Button from '@mui/material/Button';
 import Iconify from '../../../components/iconify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ export default function TopicsView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const statusDel = useSelector((state) => state.topics.statusDel);
   const error = useSelector((state) => state.topics.error);
   const dataDel = useSelector((state) => state.topics.dataDel);
@@ -61,10 +61,11 @@ export default function TopicsView() {
   }, [statusDel, error, dispatch, dataDel]);
   const [topics, setTopics] = useState([]);
   useEffect(() => {
-    if (statusCreate === 'success' && dataCreate) {
-      handleToast('success', 'Create successful');
-      dispatch(resetDel());
-      setTopics(dataCreate);
+    if (statusCreate === 'success') {
+      dispatch(resetCreate());
+      dispatch(getAllTopics()).then((res) => {
+        setTopics(res.payload);
+      });
     }
     if (error && statusCreate === 'failed') {
       handleToast('error', error.message);
@@ -133,9 +134,6 @@ export default function TopicsView() {
     dispatch(deleteTopic(id));
   };
   const notFound = !dataFiltered.length && !!filterName;
-  const handleGetContent = (content) => {
-    dispatch(createTag(content));
-  };
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -180,6 +178,7 @@ export default function TopicsView() {
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
                       handleDelete={() => handleDelete(row._id)}
+                      handleNavigate={() => navigate(`edit/${row._id}`)}
                     />
                   ))}
 

@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 import { ProductsAdd } from 'src/sections/products/add';
-
+import { LessonsAdd } from '../sections/lessons/add';
 
 // ----------------------------------------------------------------------
 
-export default function ProductsAddPage() {
+export default function LessonsAddPage() {
   return (
     <>
       <Helmet>
-        <title> Products  </title>
+        <title> Lessons Add </title>
       </Helmet>
 
-      <ProductsAdd />
+      <LessonsAdd />
     </>
   );
 }

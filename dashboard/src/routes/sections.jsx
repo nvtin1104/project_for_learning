@@ -11,11 +11,12 @@ import { UserContext } from 'src/context/user.context';
 
 import RegisterPage from 'src/pages/register';
 import OrderPage from 'src/pages/order';
-import ProductsAddPage from 'src/pages/product-add';
 import ProductsDetailPage from 'src/pages/product-detail';
 import ForgotPasswordPage from 'src/pages/forgot-password';
 import TopicPage from '../pages/topics';
 import TopicAddPage from '../pages/topics-add';
+import TopicEditPage from '../pages/topics-edit';
+import LessonsAddPage from 'src/pages/lesson-add';
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
@@ -41,11 +42,12 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'lessons', element: <LessonsPage /> },
-        { path: 'lessons/add', element: <ProductsAddPage /> },
+        { path: 'lessons/add', element: <LessonsAddPage /> },
         { path: 'products/:id', element: <ProductsDetailPage /> },
         { path: 'order', element: <OrderPage /> },
         { path: 'topics', element: <TopicPage /> },
         { path: 'topics/add', element: <TopicAddPage /> },
+        { path: 'topics/edit/:id', element: <TopicEditPage /> },
       ],
     },
     {

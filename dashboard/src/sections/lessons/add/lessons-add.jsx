@@ -8,14 +8,13 @@ import AddProductForm from '../add-product-form';
 import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import { Icon } from '@iconify/react';
+import AddQuestion from '../add-question';
 import { handleToast } from 'src/utils/toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProduct, resetCreateProduct } from 'src/redux/slices/productsSlice';
 // ----------------------------------------------------------------------
 
-export default function ProductsAdd() {
+export default function LessonsAdd() {
   const dispatch = useDispatch();
   const handleGetContent = (content) => {
     if (imgs.length === 0) {
@@ -58,48 +57,7 @@ export default function ProductsAdd() {
           <AddProductForm handleGetContent={handleGetContent} />
         </Grid>
         <Grid xs={12} md={12} lg={5}>
-          <Card sx={{ p: 3 }}>
-            <form onSubmit={handleAddImg}>
-              <Stack spacing={3}>
-                <Typography variant="h4">Add Image</Typography>
-                <TextField label="Name" name="img" fullWidth />
-              </Stack>
-
-              <LoadingButton
-                sx={{ mt: 1 }}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-                color="inherit"
-              >
-                Save
-              </LoadingButton>
-            </form>
-            <Stack spacing={2} sx={{ mt: 1 }} direction="row" useFlexGap flexWrap="wrap">
-              {imgs.map((img, index) => (
-                <div key={index} style={{ position: 'relative' }}>
-                  <img src={img} alt="img" style={{ width: '80px', height: '80px' }} />
-                  <IconButton
-                    aria-label="delete"
-                    color="black"
-                    width="10px"
-                    height="10px"
-                    onClick={() => handleDeleteImg(index)}
-                    sx={{
-                      zIndex: 1000,
-                      position: 'absolute',
-                      top: '2px',
-                      right: '2px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <Icon icon="bi:x-lg" />
-                  </IconButton>
-                </div>
-              ))}
-            </Stack>
-          </Card>
+          <AddQuestion />
         </Grid>
       </Grid>
     </Container>

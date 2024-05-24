@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
@@ -15,7 +15,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { handleToast } from '../../utils/toast';
 import Iconify from '../../components/iconify';
-
+import { getTopicById, resetUpdate, updateTopic } from '../../redux/slices/topicsSlice';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 const topicSchema = yup.object().shape({
   name: yup.string().required('Name is required').max(255, 'Name is too long'),
 });
@@ -27,11 +29,24 @@ const subjectSchema = yup.object().shape({
     .max(255, 'subjectName is too long'),
 });
 
-const AddTopicForm = ({ handleGetContent }) => {
-  AddTopicForm.propTypes = {
+const EditTopicForm = ({ handleGetContent }) => {
+  EditTopicForm.propTypes = {
     handleGetContent: PropTypes.func,
   };
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const [subject, setSubject] = React.useState([]);
+  const status = useSelector((state) => state.topics.statusUpdate);
+  const error = useSelector((state) => state.topics.error);
+  useEffect(() => {
+    if (status === 'success') {
+      dispatch(resetUpdate());
+      handleToast('success', 'Update successful');
+    }
+    if (status === 'failed') {
+      handleToast('error', error.message);
+    }
+  }, [status, error]);
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -42,10 +57,21 @@ const AddTopicForm = ({ handleGetContent }) => {
         handleToast('error', 'Please add subject');
       } else {
         values.subject = subject;
-        handleGetContent(values);
+        dispatch(updateTopic({ id, data: values }));
       }
     },
   });
+  useEffect(() => {
+    if (id) {
+      dispatch(getTopicById(id)).then((res) => {
+        formik.setValues({
+          name: res.payload.name,
+        });
+        setSubject(res.payload.subject);
+      });
+    }
+  }, [id]);
+
   const handleDelete = (index) => {
     const newSubject = subject.filter((item, i) => i !== index);
     setSubject(newSubject);
@@ -183,4 +209,4 @@ const AddTopicForm = ({ handleGetContent }) => {
   );
 };
 
-export default AddTopicForm;
+export default EditTopicForm;

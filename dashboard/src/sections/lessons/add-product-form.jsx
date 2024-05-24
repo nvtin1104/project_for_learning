@@ -10,13 +10,18 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 const productSchema = yup.object().shape({
-  name: yup.string().required('Name is required').max(255, 'Name is too long'),
+  title: yup.string().required('Name is required').max(255, 'Name is too long'),
   description: yup.string().required('Description is required').max(255, 'Description is too long'),
-  price: yup
+  limit: yup
     .number()
-    .required('Price is required')
-    .min(0, 'Price must be greater than 0')
-    .max(1000000, 'Price is too high'),
+    .required('Limit is required')
+    .min(0, 'Limit is too small')
+    .max(1000, 'Limit is too large'),
+  auth: yup
+    .string()
+    .required('Author is required')
+    .max(255, 'Author is too long')
+    .min(5, 'Author is too short'),
 });
 
 const AddProductForm = ({ handleGetContent }) => {
@@ -25,10 +30,11 @@ const AddProductForm = ({ handleGetContent }) => {
   };
   const formik = useFormik({
     initialValues: {
-      name: '',
+      title: '',
+      auth: '',
       description: '',
-      price: '',
-      tags: ['sale'],
+      type: ['TEST'],
+      limit: '',
     },
     validationSchema: productSchema,
     onSubmit: (values) => {
@@ -47,13 +53,13 @@ const AddProductForm = ({ handleGetContent }) => {
             Product Infor
           </Typography>
           <TextField
-            name="name"
-            label="Name"
-            value={formik.values.name}
+            name="title"
+            label="Title"
+            value={formik.values.title}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.name && formik.errors.name && (
+          {formik.touched.title && formik.errors.title && (
             <p
               style={{
                 color: 'red',
@@ -61,17 +67,17 @@ const AddProductForm = ({ handleGetContent }) => {
                 margin: '0',
               }}
             >
-              {formik.errors.name}
+              {formik.errors.title}
             </p>
           )}
           <TextField
-            name="price"
-            label="Price"
-            value={formik.values.price}
+            name="auth"
+            label="Auth"
+            value={formik.values.auth}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.price && formik.errors.price && (
+          {formik.touched.auth && formik.errors.auth && (
             <p
               style={{
                 color: 'red',
@@ -79,7 +85,25 @@ const AddProductForm = ({ handleGetContent }) => {
                 margin: '0',
               }}
             >
-              {formik.errors.price}
+              {formik.errors.auth}
+            </p>
+          )}
+          <TextField
+            name="limit"
+            label="Limit"
+            value={formik.values.limit}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.limit && formik.errors.limit && (
+            <p
+              style={{
+                color: 'red',
+                fontSize: '12px',
+                margin: '0',
+              }}
+            >
+              {formik.errors.limit}
             </p>
           )}
           <TextField
