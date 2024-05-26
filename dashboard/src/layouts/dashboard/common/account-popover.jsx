@@ -40,11 +40,17 @@ export default function AccountPopover() {
   const { setLogin } = useContext(UserContext);
   const data = useSelector((state) => state.users.me);
   const status = useSelector((state) => state.users.statusMe);
+  const error = useSelector((state) => state.users.error);
   const dataLogin = useSelector((state) => state.auth.user);
   const statusLogin = useSelector((state) => state.auth.status);
   useEffect(() => {
     if (status === 'success') {
       setUser(data);
+    } else if (status === 'failed') {
+      handleToast('error', error.message);
+      setLogin(false);
+      localStorage.removeItem('token');
+      router.push('/login');
     }
     if (statusLogin === 'success') {
       setUser(dataLogin);
@@ -63,7 +69,7 @@ export default function AccountPopover() {
     handleToast('success', 'Logout successful');
     setLogin(false);
     localStorage.removeItem('token');
-    router.push('/');
+    router.push('/login');
   };
   return (
     <>

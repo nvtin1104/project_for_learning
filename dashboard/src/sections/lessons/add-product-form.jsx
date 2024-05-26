@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
@@ -8,7 +8,11 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { handleToast } from '../../utils/toast';
 const productSchema = yup.object().shape({
   title: yup.string().required('Name is required').max(255, 'Name is too long'),
   description: yup.string().required('Description is required').max(255, 'Description is too long'),
@@ -24,23 +28,47 @@ const productSchema = yup.object().shape({
     .min(5, 'Author is too short'),
 });
 
-const AddProductForm = ({ handleGetContent }) => {
+const AddProductForm = ({ handleGetContent, topic }) => {
   AddProductForm.propTypes = {
     handleGetContent: PropTypes.func,
+    topic: PropTypes.array,
   };
   const formik = useFormik({
     initialValues: {
       title: '',
       auth: '',
       description: '',
-      type: ['TEST'],
+      type: 'test',
       limit: '',
     },
     validationSchema: productSchema,
     onSubmit: (values) => {
-      handleGetContent(values);
+      if (selectedTopic === '' || selectedSubject === '') {
+        handleToast('error', 'Please select topic and subject');
+      } else {
+        const category = {
+          topicId: selectedTopic,
+          subject: selectedSubject,
+        };
+        values.category = category;
+        handleGetContent(values);
+      }
     },
   });
+  const [selectedTopic, setSelectedTopic] = React.useState('');
+  const [subject, setSubject] = React.useState([]);
+  const [selectedSubject, setSelectedSubject] = React.useState('');
+  useEffect(() => {
+    if (selectedTopic) {
+      const newTopic = topic.find((item) => item._id === selectedTopic);
+      setSubject(newTopic.subject);
+    }
+  }, [selectedTopic]);
+
+  const handleChange = (event) => {
+    setSelectedTopic(event.target.value);
+  };
+
   return (
     <Card
       sx={{
@@ -50,7 +78,7 @@ const AddProductForm = ({ handleGetContent }) => {
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3}>
           <Typography variant="h4" sx={{ mb: 5 }}>
-            Product Infor
+            Lesson Info
           </Typography>
           <TextField
             name="title"
@@ -123,6 +151,42 @@ const AddProductForm = ({ handleGetContent }) => {
             >
               {formik.errors.description}
             </p>
+          )}
+          {topic.length > 0 && (
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Topic</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedTopic}
+                label="Topic"
+                onChange={handleChange}
+              >
+                {topic.map((item, index) => (
+                  <MenuItem key={index} value={item._id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          {subject.length > 0 && (
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-subject-label">Subject</InputLabel>
+              <Select
+                labelId="demo-simple-subject-label"
+                id="demo-simple-subject"
+                value={selectedSubject}
+                label="Subject"
+                onChange={(e) => setSelectedSubject(e.target.value)}
+              >
+                {subject.map((item, index) => (
+                  <MenuItem key={index} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           )}
         </Stack>
 

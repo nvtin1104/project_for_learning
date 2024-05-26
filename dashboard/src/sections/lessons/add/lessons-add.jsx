@@ -18,11 +18,14 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
 import Iconify from '../../../components/iconify';
+import { getAllTopics } from '../../../redux/slices/topicsSlice';
+import { createLesson, resetCreateLesson } from '../../../redux/slices/lessonsSlice';
 // ----------------------------------------------------------------------
 
 export default function LessonsAdd() {
   const dispatch = useDispatch();
   const [question, setQuestion] = useState([]);
+
   const dispach = useDispatch();
   // useEffect(() => {
   //   if (statusCreate === 'success') {
@@ -30,8 +33,33 @@ export default function LessonsAdd() {
   //     setQuestion([]);
   //   }
   // }
+  const [topic, setTopic] = useState([]);
+  const statusCreate = useSelector((state) => state.lessons.statusCreate);
+
+  useEffect(() => {
+    dispatch(getAllTopics()).then((res) => {
+      if (res.payload) {
+        setTopic(res.payload);
+      }
+    });
+  }, [dispach]);
+  useEffect(() => {
+    if (statusCreate === 'success') {
+      handleToast('success', 'Create successful');
+      dispatch(resetCreateLesson());
+      setQuestion([]);
+    } else if (statusCreate === 'failed') {
+      handleToast('error', 'Create failed');
+      dispatch(resetCreateLesson());
+    }
+  }, [statusCreate]);
   const handleGetContent = (content) => {
-    console.log(content);
+    if (question.length > 0) {
+      content.questions = question;
+      dispatch(createLesson(content));
+    } else {
+      handleToast('error', 'Please add question');
+    }
   };
   const handleDeleteQuestion = (i) => {
     const newQuestion = question.filter((item, index) => i !== index);
@@ -51,7 +79,7 @@ export default function LessonsAdd() {
       <Grid container spacing={3}>
         <Grid xs={12} md={12} lg={7}>
           <Stack spacing={2}>
-            <AddProductForm handleGetContent={handleGetContent} />
+            <AddProductForm handleGetContent={handleGetContent} topic={topic} />
             <Card
               sx={{
                 p: 3,

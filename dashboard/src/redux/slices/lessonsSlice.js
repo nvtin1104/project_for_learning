@@ -121,6 +121,6 @@ const lessonsSlice = createSlice({
 });
 export const { resetUpdate } = lessonsSlice.actions;
 export const { resetState: resetProductsAction } = lessonsSlice.actions;
-export const { resetCreate: resetCreateProduct } = lessonsSlice.actions;
+export const { resetCreate: resetCreateLesson } = lessonsSlice.actions;
 export const { resetDelete: resetDeleteProduct } = lessonsSlice.actions;
 export default lessonsSlice.reducer;
