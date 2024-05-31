@@ -20,20 +20,30 @@ export default function UserTableRow({
   selected,
   name,
   avatarUrl,
-  company,
+  type,
   role,
-  isVerified,
+  gender,
   status,
   handleClick,
+  handleDelete,
+  navigate,
+  id,
 }) {
   const [open, setOpen] = useState(null);
+
+  const handleNavigate = (id) => {
+    navigate(id);
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
-
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+  const handleDeleteUser = (value) => {
+    handleDelete(value);
+    handleCloseMenu();
   };
 
   return (
@@ -52,14 +62,14 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{type.toUpperCase()}</TableCell>
 
-        <TableCell>{role}</TableCell>
+        <TableCell>{role.toUpperCase()}</TableCell>
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
+        <TableCell align="center">{gender.toUpperCase()}</TableCell>
 
         <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+          <Label color={(status === 'inactive' && 'error') || 'success'}>{status}</Label>
         </TableCell>
 
         <TableCell align="right">
@@ -79,12 +89,12 @@ export default function UserTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={() => handleNavigate(id)}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={() => handleDeleteUser(id)} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -95,11 +105,13 @@ export default function UserTableRow({
 
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
-  company: PropTypes.any,
+  type: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
+  gender: PropTypes.any,
   name: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
+  navigate: PropTypes.any,
+  id: PropTypes.any,
 };

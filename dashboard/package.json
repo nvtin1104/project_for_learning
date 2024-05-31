@@ -46,6 +46,7 @@
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
     "simplebar-react": "^3.2.4",
+    "src": "^1.1.2",
     "swiper": "^11.1.0",
     "yup": "^1.4.0"
   },

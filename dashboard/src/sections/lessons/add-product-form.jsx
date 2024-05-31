@@ -13,11 +13,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { handleToast } from '../../utils/toast';
+
 const productSchema = yup.object().shape({
   title: yup.string().required('Name is required').max(255, 'Name is too long'),
   description: yup.string().required('Description is required').max(255, 'Description is too long'),
   limit: yup
     .number()
+    .typeError('Limit must be number')
     .required('Limit is required')
     .min(0, 'Limit is too small')
     .max(1000, 'Limit is too large'),
@@ -26,6 +28,7 @@ const productSchema = yup.object().shape({
     .required('Author is required')
     .max(255, 'Author is too long')
     .min(5, 'Author is too short'),
+  type: yup.string().typeError('Type must be string').required('Type is required'),
 });
 
 const AddProductForm = ({ handleGetContent, topic }) => {
@@ -150,6 +153,33 @@ const AddProductForm = ({ handleGetContent, topic }) => {
               }}
             >
               {formik.errors.description}
+            </p>
+          )}
+          <FormControl fullWidth>
+            <InputLabel id="select-type-label">Type</InputLabel>
+            <Select
+              labelId="select-type-label"
+              id="select-type"
+              value={formik.values.type}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              label="Type"
+              // onChange={handleChange}
+            >
+              <MenuItem value="test">TEST</MenuItem>
+              <MenuItem value="lesson">LESSON</MenuItem>
+              <MenuItem value="memo">MEMO</MenuItem>
+            </Select>
+          </FormControl>
+          {formik.touched.type && formik.errors.type && (
+            <p
+              style={{
+                color: 'red',
+                fontSize: '12px',
+                margin: '0',
+              }}
+            >
+              {formik.errors.type}
             </p>
           )}
           {topic.length > 0 && (

@@ -1,8 +1,8 @@
+import {handleCreatePassword} from '~/utils/handlePassword'
+import {UserModel} from '../models/usersModel'
+import {ObjectId} from 'mongodb'
+import {createResfeshToken, createToken} from '~/middlewares/auth'
 
-import { handleCreatePassword } from '~/utils/handlePassword'
-import { UserModel } from '../models/usersModel'
-import { ObjectId } from 'mongodb'
-import { createResfeshToken, createToken } from '~/middlewares/auth'
 const createUser = async (data) => {
   try {
     const existedUser = await UserModel.getUserBy(data.username, 'username')
@@ -60,8 +60,7 @@ const updateUserById = async (id, data) => {
     if (data.password) {
       data.password = await handleCreatePassword(data.password)
     }
-    const updatedUser = await UserModel.update(id, data)
-    return updatedUser
+    return await UserModel.update(id, data)
   } catch (error) {
     throw new Error(error)
   }

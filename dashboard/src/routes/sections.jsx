@@ -17,6 +17,7 @@ import TopicPage from '../pages/topics';
 import TopicAddPage from '../pages/topics-add';
 import TopicEditPage from '../pages/topics-edit';
 import LessonsAddPage from 'src/pages/lesson-add';
+import UserEditPage from '../pages/user-edit';
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
@@ -41,6 +42,7 @@ export default function Router() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
+        { path: 'user/:id', element: <UserEditPage /> },
         { path: 'lessons', element: <LessonsPage /> },
         { path: 'lessons/add', element: <LessonsAddPage /> },
         { path: 'products/:id', element: <ProductsDetailPage /> },
