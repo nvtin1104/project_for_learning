@@ -55,13 +55,8 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'utils',
-      children: [
-        {
-          path: 'util-shadow',
-          element: <UtilsShadow />
-        }
-      ]
+      path: 'topic',
+      element: <UtilsShadow />
     },
     // {
     //   path: 'icons',

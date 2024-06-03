@@ -1,43 +1,46 @@
 // assets
-import { IconKey } from '@tabler/icons-react';
+import { IconDashboard, IconHome, IconSchool, IconInfoSquareRounded } from '@tabler/icons-react';
 
 // constant
 const icons = {
-    IconKey
+  IconDashboard,
+  IconHome,
+  IconSchool,
+  IconInfoSquareRounded
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
-    id: 'pages',
-    title: 'Pages',
-    caption: 'Pages Caption',
-    type: 'group',
-    children: [
-        {
-            id: 'authentication',
-            title: 'Authentication',
-            type: 'collapse',
-            icon: icons.IconKey,
-
-            children: [
-                {
-                    id: 'login3',
-                    title: 'Login',
-                    type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
-                },
-                {
-                    id: 'register3',
-                    title: 'Register',
-                    type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
-                }
-            ]
-        }
-    ]
+  id: 'pages',
+  title: 'Pages',
+  type: 'group',
+  children: [
+    {
+      id: 'home',
+      title: 'Home',
+      type: 'item',
+      url: '/',
+      icon: icons.IconHome,
+      breadcrumbs: false
+    },
+    {
+      id: 'topic',
+      title: 'Topic',
+      type: 'item',
+      url: '/topic',
+      icon: icons.IconSchool,
+      breadcrumbs: false
+    },
+    {
+      id: 'about',
+      title: 'About',
+      type: 'item',
+      url: '/about',
+      icon: icons.IconInfoSquareRounded,
+      breadcrumbs: true
+    }
+  ]
 };
 
 export default pages;

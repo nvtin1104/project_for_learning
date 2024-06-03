@@ -13,17 +13,9 @@ const dashboard = {
   children: [
     {
       id: 'default',
-      title: 'Dashboard',
+      title: 'Go to Dashboard',
       type: 'item',
       url: '/dashboard/default',
-      icon: icons.IconDashboard,
-      breadcrumbs: false
-    },
-    {
-      id: 'topic',
-      title: 'Topic',
-      type: 'item',
-      url: '/topic',
       icon: icons.IconDashboard,
       breadcrumbs: false
     }
