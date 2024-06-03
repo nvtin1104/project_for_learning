@@ -56,7 +56,10 @@ export default function UserEditPage() {
   }, [dispatch, id]);
   const handleUpdate = (data) => {
     dispatch(updateUser({ id, data })).then((res) => {
-      handleToast('success', 'Update user successfully');
+      if (res.meta.requestStatus === 'fulfilled') {
+        handleToast('success', 'Update user successfully');
+        setUser(res.payload);
+      }
     });
   };
   return (
@@ -64,7 +67,9 @@ export default function UserEditPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">User Info</Typography>
       </Stack>
-      {Object.keys(user).length > 0 && <EditUserForm user={user} handleGetContent={handleUpdate} />}
+      {Object.keys(user).length > 0 && user && (
+        <EditUserForm user={user} handleGetContent={handleUpdate} />
+      )}
     </Container>
   );
 }

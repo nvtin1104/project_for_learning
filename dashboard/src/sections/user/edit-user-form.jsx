@@ -44,7 +44,7 @@ const EditUserForm = ({ handleGetContent, user }) => {
     },
     validationSchema: userSchema,
     onSubmit: (values) => {
-      const data = values;
+      const data = { ...values };
       delete data.username;
       delete data.role;
       handleGetContent(data);

@@ -84,7 +84,7 @@ const usersSlice = createSlice({
       })
       .addCase(getUserById.fulfilled, (state, { payload }) => {
         state.statusById = 'success';
-        state.userById = payload.users;
+        state.userById = payload;
       })
       .addCase(getUserById.pending, (state) => {
         state.statusById = 'loading';
