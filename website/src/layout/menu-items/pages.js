@@ -26,9 +26,9 @@ const pages = {
     },
     {
       id: 'topic',
-      title: 'Topic',
+      title: 'Lessons',
       type: 'item',
-      url: '/topic',
+      url: '/lessons',
       icon: icons.IconSchool,
       breadcrumbs: false
     },

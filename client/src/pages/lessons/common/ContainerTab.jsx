@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import CardLesson from '../../../components/card/CardLesson';
 import { handleGetAllActiveLessons } from '../../../redux/slices/lessonsSlice';
-import PaginationCard from '../../../components/pagination/PaginationCard';
+// import PaginationCard from '../../../components/pagination/PaginationCard';
 import LoadingLessons from '../../../components/loading/LoadingLesson';
 const AntTabs = styled(Tabs)({
 	borderBottom: '1px solid #e8e8e8',
@@ -161,13 +161,13 @@ export default function ContainerTab() {
 						</>
 					)}
 				</Grid>
-				{status === 'success' && (
-					<PaginationCard
-						page={data.page}
-						maxPage={data.maxPage}
-						handleGetPage={handleGetPage}
-					/>
-				)}
+					{status === 'success' && (
+						<PaginationCard
+							page={data.page}
+							maxPage={data.maxPage}
+							handleGetPage={handleGetPage}
+						/>
+					)}
 			</Box>
 		</Box>
 	);
