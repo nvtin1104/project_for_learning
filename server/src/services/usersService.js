@@ -9,9 +9,8 @@ const createUser = async (data) => {
     if (existedUser) {
       throw 'Username is already taken'
     }
-    const password = await handleCreatePassword(data.password)
-    data.password = password
-    data.resfeshToken = createResfeshToken({ username: data.username, role: 'user' })
+    data.password =  await handleCreatePassword(data.password)
+    data.refreshToken = createResfeshToken({ username: data.username, role: 'user' })
 
     const newUser = await UserModel.create(data)
     data.accessToken = createToken({ username: data.username, role: 'user', userId: newUser._id})
@@ -27,8 +26,7 @@ const deleteUserById = async (id) => {
     if (!user) {
       throw 'User not found'
     }
-    const result = await UserModel.deleteUserById(id)
-    return result
+    return await UserModel.deleteUserById(id)
   } catch (error) {
     throw new Error(error)
   }

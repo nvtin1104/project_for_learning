@@ -14,14 +14,14 @@ const loginUser = async (data, role) => {
   if (user.role !== role) {
     throw new Error(`User is not ${role}`)
   }
-  const resfeshToken = createResfeshToken({ username: user.username, role: user.role })
-  const accssesToken = createToken({ username: user.username, role: user.role, userId: user._id})
-  const update = await AuthModel.updateToken(data.username, resfeshToken)
+  const refreshToken = createResfeshToken({ username: user.username, role: user.role })
+  const accessesToken = createToken({ username: user.username, role: user.role, userId: user._id})
+  const update = await AuthModel.updateToken(data.username, refreshToken)
   if (!update) {
     throw new Error('Error updating token')
   }
   delete user.password
-  user.accssesToken = accssesToken
+  user.accssesToken = accessesToken
   return user
 }
 

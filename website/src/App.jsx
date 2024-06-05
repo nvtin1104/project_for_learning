@@ -12,7 +12,7 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-
+import { ToastContainer } from 'react-toastify';
 // ==============================|| APP ||============================== //
 
 const App = () => {
@@ -22,6 +22,8 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline />
+        <ToastContainer stacked />
+
         <NavigationScroll>
           <RouterProvider router={router} />
         </NavigationScroll>

@@ -5,10 +5,11 @@ async function handleRequest(method, url, data) {
 }
 
 const AuthService = {
-  getUserGit: (code) =>
-    handleRequest('get', `/account/getTokenUser?code=${code}`),
-  handleGetUser: () => handleRequest('get', '/account/getUser'),
-  addUserGg: (data) => handleRequest('post', '/account/addUserGg', data),
+  login: (data) => handleRequest('post', 'auth/login', data),
+  register: (data) => handleRequest('post', 'users', data),
+  getOTP: (data) => handleRequest('post', 'auth/getOTP', data),
+  changePassword: (data) => handleRequest('post', 'auth/changePassword', data),
+  loginWithGG: (data) => handleRequest('post', 'auth/loginWithGG', data)
 };
 
 export default AuthService;

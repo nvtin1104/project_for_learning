@@ -18,7 +18,7 @@ const userSchema = Joi.object({
         Joi.date().default(null),
     verifiedDate:
         Joi.date().default(null),
-    resfeshToken:
+    refreshToken:
         Joi.string(),
     status:
         Joi.string().valid('active', 'inactive').default('active'),
@@ -37,7 +37,7 @@ const userUpdateSchema = Joi.object({
     gender: Joi.string().valid('men', 'women', 'other'),
     status: Joi.string().valid('active', 'inactive'),
     verifiedDate: Joi.date(),
-    resfeshToken: Joi.string(),
+    refreshToken: Joi.string(),
     type: Joi.string().valid('student', 'teacher', 'parent')
 })
 

@@ -9,11 +9,10 @@ const getUserByUsername = async (username) => {
     throw new Error(error)
   }
 }
-const updateToken = async (username, resfeshToken) => {
+const updateToken = async (username, refreshToken) => {
   try {
     const db = await GET_DB()
-    const update = await db.collection('users').updateOne({ username }, { $set: { resfeshToken } })
-    return update
+    return  await db.collection('users').updateOne({ username }, { $set: { refreshToken: refreshToken } })
   } catch (error) {
     throw new Error(error)
   }

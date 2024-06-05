@@ -4,13 +4,15 @@ import { combineReducers } from 'redux';
 import customizationReducer from './customizationReducer';
 import lessonsReducer from './slices/lessonsSlice';
 import searchReducer from './slices/searchSlice';
+import authReducer from './slices/authSlice';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
 const reducer = combineReducers({
   customization: customizationReducer,
   lessons: lessonsReducer,
-  search: searchReducer
+  search: searchReducer,
+  auth: authReducer
 });
 
 export default reducer;
