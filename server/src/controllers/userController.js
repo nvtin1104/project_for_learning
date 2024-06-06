@@ -14,6 +14,10 @@ const handleCreateUser = async (req, res) => {
             res.status(StatusCodes.BAD_REQUEST).json({error: 'Username is required'})
             return
         }
+        if(user.username === 'admin') {
+            res.status(StatusCodes.BAD_REQUEST).json({error: 'Username can not be admin'})
+            return
+        }
         if (!user.password) {
             res.status(StatusCodes.BAD_REQUEST).json({error: 'Password is required'})
             return

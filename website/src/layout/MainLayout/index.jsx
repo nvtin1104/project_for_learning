@@ -19,6 +19,8 @@ import { drawerWidth } from 'store/constant';
 // assets
 import { IconChevronRight } from '@tabler/icons-react';
 import { useEffect } from 'react';
+import { getCurrentUser } from 'store/slices/authSlice';
+import { handleToast } from 'utils/toast';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' && prop !== 'theme' })(({ theme, open }) => ({
   ...theme.typography.mainContent,
@@ -66,6 +68,15 @@ const MainLayout = () => {
   };
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const user = useSelector((state) => state.auth.user);
+  const status = useSelector((state) => state.auth.statusCurrent);
+  const error = useSelector((state) => state.auth.error);
+  useEffect(() => {
+    if (status === 'failed') {
+      navigate('/login');
+      handleToast('error', error.error);
+    }
+  }, [status, error]);
   useEffect(() => {
     const isJWT = (token) => {
       const jwtPattern = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
@@ -74,7 +85,9 @@ const MainLayout = () => {
 
     if (token) {
       if (isJWT(token)) {
-        console.log('Token is a valid JWT');
+        if (user === null) {
+          dispatch(getCurrentUser());
+        }
       } else {
         navigate('/login');
       }

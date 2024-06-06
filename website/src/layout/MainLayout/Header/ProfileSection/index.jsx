@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { resetStateLogin } from 'store/slices/authSlice';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
@@ -49,12 +49,15 @@ const ProfileSection = () => {
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
   const handleLogout = async () => {
-    console.log('Logout');
+    localStorage.removeItem('token');
+    navigate('/login');
+    dispatch(resetStateLogin());
   };
 
   const handleClose = (event) => {
@@ -63,6 +66,7 @@ const ProfileSection = () => {
     }
     setOpen(false);
   };
+  const user = useSelector((state) => state.auth.user);
 
   const handleListItemClick = (event, index, route = '') => {
     setSelectedIndex(index);
@@ -157,7 +161,7 @@ const ProfileSection = () => {
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          Johne Doe
+                          {user?.name}
                         </Typography>
                       </Stack>
                       <Typography variant="subtitle2">Project Admin</Typography>
@@ -182,7 +186,7 @@ const ProfileSection = () => {
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2, pt: 0 }}>
-                      <UpgradePlanCard />
+                      {/*<UpgradePlanCard />*/}
                       <Divider />
                       <Card
                         sx={{
@@ -246,7 +250,7 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
-                          onClick={(event) => handleListItemClick(event, 0, '#')}
+                          onClick={(event) => handleListItemClick(event, 0, '/profile')}
                         >
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="1.3rem" />

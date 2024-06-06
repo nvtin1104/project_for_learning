@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import AuthService from '../../services/auth.service';
+
 const handleAsyncThunk = async (asyncFunction, args, { rejectWithValue }) => {
   try {
     return await asyncFunction(...args);
@@ -14,6 +15,9 @@ export const register = createAsyncThunk('auth/register', (data, thunkAPI) => ha
 export const getOTP = createAsyncThunk('auth/getOTP', (data, thunkAPI) => handleAsyncThunk(AuthService.getOTP, [data], thunkAPI));
 export const changePassword = createAsyncThunk('auth/changePassword', (data, thunkAPI) =>
   handleAsyncThunk(AuthService.changePassword, [data], thunkAPI)
+);
+export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', (_, thunkAPI) =>
+  handleAsyncThunk(AuthService.getCurrent, [null], thunkAPI)
 );
 export const loginWithGG = createAsyncThunk('auth/loginWithGG', (data, thunkAPI) =>
   handleAsyncThunk(AuthService.loginWithGG, [data], thunkAPI)
@@ -37,12 +41,22 @@ const authSlice = createSlice({
       state.error = null;
       state.status = 'idle';
       state.user = {};
+      state.statusCurrent = 'idle';
       state.statusRegister = 'idle';
-      state.register = null;
       state.statusOTP = 'idle';
       state.otp = null;
       state.statusChange = 'idle';
       state.change = null;
+    },
+    resetStateLogin: (state) => {
+      state.error = null;
+      state.status = 'idle';
+      state.user = {};
+    },
+    resetRegister: (state) => {
+      state.error = null;
+      state.statusRegister = 'idle';
+      state.user = {};
     },
     resetOTP: (state) => {
       state.statusOTP = 'idle';
@@ -66,9 +80,20 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = payload;
       })
+      .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
+        state.statusCurrent = 'success';
+        state.user = payload;
+      })
+      .addCase(getCurrentUser.pending, (state) => {
+        state.statusCurrent = 'loading';
+      })
+      .addCase(getCurrentUser.rejected, (state, { payload }) => {
+        state.statusCurrent = 'failed';
+        state.error = payload;
+      })
       .addCase(register.fulfilled, (state, { payload }) => {
         state.statusRegister = 'success';
-        state.register = payload;
+        state.user = payload;
       })
       .addCase(register.pending, (state) => {
         state.statusRegister = 'loading';
@@ -114,5 +139,7 @@ const authSlice = createSlice({
 });
 export const { resetOTP } = authSlice.actions;
 export const { resetChangePassword } = authSlice.actions;
+export const { resetRegister } = authSlice.actions;
+export const { resetStateLogin } = authSlice.actions;
 export const { resetState: resetAuthAction } = authSlice.actions;
 export default authSlice.reducer;

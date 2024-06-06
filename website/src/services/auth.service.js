@@ -7,6 +7,7 @@ async function handleRequest(method, url, data) {
 const AuthService = {
   login: (data) => handleRequest('post', 'auth/login', data),
   register: (data) => handleRequest('post', 'users', data),
+  getCurrent: () => handleRequest('get', 'users/current'),
   getOTP: (data) => handleRequest('post', 'auth/getOTP', data),
   changePassword: (data) => handleRequest('post', 'auth/changePassword', data),
   loginWithGG: (data) => handleRequest('post', 'auth/loginWithGG', data)

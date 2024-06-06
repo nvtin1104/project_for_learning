@@ -8,12 +8,10 @@ import Loadable from 'ui-component/Loadable';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard')));
 
 // utilities routing
-const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const LessonsList = Loadable(lazy(() => import('views/client/lessons/view/ListView')));
 const LessonDetail = Loadable(lazy(() => import('views/client/lessons/detail/DetailView')));
+const ProfilePage = Loadable(lazy(() => import('views/client/profile/view/ProfileView')));
 // sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -36,30 +34,16 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'utils',
-      children: [
-        {
-          path: 'util-typography',
-          element: <UtilsTypography />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
-        {
-          path: 'util-color',
-          element: <UtilsColor />
-        }
-      ]
-    },
-    {
       path: 'lessons',
       element: <LessonsList />
     },
     {
       path: 'lessons/:id',
       element: <LessonDetail />
+    },
+    {
+      path: 'profile',
+      element: <ProfilePage />
     }
   ]
 };

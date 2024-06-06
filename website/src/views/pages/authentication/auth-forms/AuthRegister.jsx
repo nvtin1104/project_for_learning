@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { createUser } from 'src/store/slices/usersSlice';
+import { register, resetRegister } from 'src/store/slices/authSlice';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -46,7 +46,9 @@ const AuthRegister = ({ ...others }) => {
   const [isSubmit, setSubmit] = useState(false);
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
-  // const status = useSelector((state) => state.user)
+  const status = useSelector((state) => state.auth.statusRegister);
+  const error = useSelector((state) => state.auth.error);
+  const navigate = useNavigate();
   const googleHandler = async () => {
     console.error('Register');
   };
@@ -67,10 +69,20 @@ const AuthRegister = ({ ...others }) => {
   useEffect(() => {
     changePassword('123456');
   }, []);
+  useEffect(() => {
+    if (status === 'success') {
+      handleToast('success', 'Register successfully');
+      dispatch(resetRegister());
+      navigate('/login');
+    } else if (status === 'failed') {
+      setSubmit(false);
+      handleToast('error', error.error);
+    }
+  }, [status, error]);
   const handleSubmit = (values) => {
     if (checked) {
       setSubmit(true);
-      dispatch(createUser({ data: values }));
+      dispatch(register(values));
     } else {
       handleToast('error', 'You need agree with Terms & Condition.');
     }
@@ -135,8 +147,8 @@ const AuthRegister = ({ ...others }) => {
           password: ''
         }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().max(255, 'Name is too long').min(6, 'Name is short'),
-          username: Yup.string().max(255, 'Username is too long').min(6, 'Username is too short').required('Email is required'),
+          name: Yup.string().max(255, 'Name is too long').min(3, 'Name is short'),
+          username: Yup.string().max(255, 'Username is too long').min(3, 'Username is too short').required('Email is required'),
           password: Yup.string().max(255, 'Password is too long').min(6, 'Password is too short').required('Password is required')
         })}
         onSubmit={handleSubmit}
