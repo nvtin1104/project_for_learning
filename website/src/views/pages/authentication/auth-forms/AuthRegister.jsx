@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createUser } from 'src/store/slices/usersSlice';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -32,6 +33,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { handleToast } from '../../../../utils/toast';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
@@ -41,14 +43,13 @@ const AuthRegister = ({ ...others }) => {
   const customization = useSelector((state) => state.customization);
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(true);
-
+  const [isSubmit, setSubmit] = useState(false);
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
-
+  // const status = useSelector((state) => state.user)
   const googleHandler = async () => {
     console.error('Register');
   };
-
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -56,7 +57,7 @@ const AuthRegister = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
+  const dispatch = useDispatch();
   const changePassword = (value) => {
     const temp = strengthIndicator(value);
     setStrength(temp);
@@ -66,7 +67,14 @@ const AuthRegister = ({ ...others }) => {
   useEffect(() => {
     changePassword('123456');
   }, []);
-
+  const handleSubmit = (values) => {
+    if (checked) {
+      setSubmit(true);
+      dispatch(createUser({ data: values }));
+    } else {
+      handleToast('error', 'You need agree with Terms & Condition.');
+    }
+  };
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
@@ -122,55 +130,50 @@ const AuthRegister = ({ ...others }) => {
 
       <Formik
         initialValues={{
-          email: '',
-          password: '',
-          submit: null
+          name: '',
+          username: '',
+          password: ''
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          name: Yup.string().max(255, 'Name is too long').min(6, 'Name is short'),
+          username: Yup.string().max(255, 'Username is too long').min(6, 'Username is too short').required('Email is required'),
+          password: Yup.string().max(255, 'Password is too long').min(6, 'Password is too short').required('Password is required')
         })}
+        onSubmit={handleSubmit}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
-            <Grid container spacing={matchDownSM ? 0 : 2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  margin="normal"
-                  name="fname"
-                  type="text"
-                  defaultValue=""
-                  sx={{ ...theme.typography.customInput }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  margin="normal"
-                  name="lname"
-                  type="text"
-                  defaultValue=""
-                  sx={{ ...theme.typography.customInput }}
-                />
-              </Grid>
-            </Grid>
-            <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-email-register">Email Address / Username</InputLabel>
+            <FormControl fullWidth error={Boolean(touched.name && errors.name)} sx={{ ...theme.typography.customInput }}>
+              <InputLabel htmlFor="outlined-adornment-name-register">Name</InputLabel>
               <OutlinedInput
-                id="outlined-adornment-email-register"
-                type="email"
-                value={values.email}
-                name="email"
+                id="outlined-adornment-name-register"
+                type="text"
+                value={values.name}
+                name="name"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 inputProps={{}}
               />
-              {touched.email && errors.email && (
+              {touched.name && errors.name && (
                 <FormHelperText error id="standard-weight-helper-text--register">
-                  {errors.email}
+                  {errors.name}
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl fullWidth error={Boolean(touched.username && errors.username)} sx={{ ...theme.typography.customInput }}>
+              <InputLabel htmlFor="outlined-adornment-username-register">Username</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-username-register"
+                type="text"
+                value={values.username}
+                name="username"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                inputProps={{}}
+              />
+              {touched.username && errors.username && (
+                <FormHelperText error id="standard-weight-helper-text--register">
+                  {errors.username}
                 </FormHelperText>
               )}
             </FormControl>
@@ -252,7 +255,7 @@ const AuthRegister = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                <Button disableElevation disabled={isSubmit} fullWidth size="large" type="submit" variant="contained" color="secondary">
                   Sign up
                 </Button>
               </AnimateButton>

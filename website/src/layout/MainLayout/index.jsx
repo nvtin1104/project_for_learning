@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
@@ -18,6 +18,7 @@ import { drawerWidth } from 'store/constant';
 
 // assets
 import { IconChevronRight } from '@tabler/icons-react';
+import { useEffect } from 'react';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' && prop !== 'theme' })(({ theme, open }) => ({
   ...theme.typography.mainContent,
@@ -63,7 +64,24 @@ const MainLayout = () => {
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
   };
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  useEffect(() => {
+    const isJWT = (token) => {
+      const jwtPattern = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
+      return jwtPattern.test(token);
+    };
 
+    if (token) {
+      if (isJWT(token)) {
+        console.log('Token is a valid JWT');
+      } else {
+        navigate('/login');
+      }
+    } else {
+      navigate('/login');
+    }
+  }, [token, navigate]);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

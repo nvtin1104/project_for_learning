@@ -32,6 +32,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import Google from 'assets/images/icons/social-google.svg';
 import { login } from '../../../../store/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -48,10 +49,12 @@ const AuthLogin = ({ ...others }) => {
   const googleHandler = async () => {
     console.error('Login');
   };
+  const navigate = useNavigate();
   useEffect(() => {
     if (status === 'success') {
       handleToast('success', 'Login success full');
       localStorage.setItem('token', data.accssesToken);
+      navigate('/', { state: { login: true } });
     }
   }, [status]);
 

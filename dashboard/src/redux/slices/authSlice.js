@@ -4,8 +4,7 @@ import AuthService from 'src/services/auth.service';
 
 const handleAsyncThunk = async (asyncFunction, args, { rejectWithValue }) => {
   try {
-    const response = await asyncFunction(...args);
-    return response;
+    return await asyncFunction(...args);
   } catch (err) {
     return rejectWithValue(err.response.data);
   }

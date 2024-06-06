@@ -11,13 +11,13 @@ async function handleRequest(method, url, data) {
 }
 
 const UsersService = {
+  createUser: (data) => handleRequest('post', 'users', data),
   getAll: () => handleRequest('get', 'users'),
-  getByID: (id) => handleRequest('get', `users/${id}`),
-  delete: (id) => handleRequest('delete', `users/${id}`),
-  add: (data) => handleRequest('post', 'users', data),
-  create: (data) => handleRequest('post', 'users', data),
-  update: (id, data) => handleRequest('put', `users/${id}`, data),
-  addCoin: (id, data) => handleRequest('patch', `users/coin/${id}`, data),
+  getMe: () => handleRequest('get', 'users/current'),
+  update: (id, data) => handleRequest('patch', `users/${id}`, data),
+  getUserById: (id) => handleRequest('get', `users/${id}`),
+  updatePassword: (id, data) => handleRequest('patch', `users/password/${id}`, data),
+  delete: (id) => handleRequest('delete', `users/${id}`)
 };
 
 export default UsersService;
