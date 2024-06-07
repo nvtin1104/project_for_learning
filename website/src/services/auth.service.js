@@ -9,7 +9,7 @@ const AuthService = {
   register: (data) => handleRequest('post', 'users', data),
   getCurrent: () => handleRequest('get', 'users/current'),
   getOTP: (data) => handleRequest('post', 'auth/getOTP', data),
-  changePassword: (data) => handleRequest('post', 'auth/changePassword', data),
+  resetPassword: (data) => handleRequest('post', 'users/reset-password', data),
   loginWithGG: (data) => handleRequest('post', 'auth/loginWithGG', data)
 };
 

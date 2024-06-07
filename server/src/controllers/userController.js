@@ -108,6 +108,19 @@ const handleChangePassword = async (req, res) => {
     }
 
 }
+const handleResetPassword = async (req, res) => {
+    try {
+        const data = req.body
+        const result = await UsersService.resetPassword(data.username)
+        res.status(StatusCodes.OK).json({
+            message: 'Password reset successfully',
+            result
+        })
+    }
+    catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+    }
+}
 export const UsersController = {
     handleCreateUser,
     handleGetAllUsers,
@@ -116,5 +129,6 @@ export const UsersController = {
     handleUpdateUserById,
     handleGetCurrentUser,
     handleUpdateCurrentUser,
-    handleChangePassword
+    handleChangePassword,
+    handleResetPassword
 }

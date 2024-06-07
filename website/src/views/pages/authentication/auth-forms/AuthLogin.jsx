@@ -32,7 +32,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import Google from 'assets/images/icons/social-google.svg';
 import { login } from 'store/slices/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -148,7 +148,13 @@ const AuthLogin = ({ ...others }) => {
                     }
                     label="Remember me"
                   />
-                  <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
+                  <Typography
+                    component={Link}
+                    to="/reset-password"
+                    variant="subtitle1"
+                    color="secondary"
+                    sx={{ textDecoration: 'none', cursor: 'pointer' }}
+                  >
                     Forgot Password?
                   </Typography>
                 </Stack>

@@ -1,12 +1,12 @@
+import { emailRegex } from '~/utils/regex';
+
 const bcrypt = require('bcrypt')
 const saltRounds = 10 // Độ phức tạp của salt
 
 export const handleCreatePassword = async (password) => {
   try {
-    // Tạo salt và hash mật khẩu
     const salt = await bcrypt.genSalt(saltRounds)
-    const hash = await bcrypt.hash(password, salt)
-    return hash
+    return await bcrypt.hash(password, salt)
   } catch (error) {
     // Handle error in a different way
     throw new Error('Error hashing password: ' + error)
@@ -14,11 +14,18 @@ export const handleCreatePassword = async (password) => {
 }
 export const handleComparePassword = async (password, hash) => {
   try {
-    // So sánh mật khẩu nhập và hash
-    const isMatch = await bcrypt.compare(password, hash)
-    return isMatch
+    return await bcrypt.compare(password, hash)
   } catch (error) {
     // Handle error in a different way
     return false
+  }
+}
+export  const randomPassword = async () => {
+  try {
+    const random = Math.random().toString(8).slice(-8)
+    const password = await handleCreatePassword(random)
+    return { random, password }
+  } catch (error) {
+    throw new Error('Error generating random password: ' + error)
   }
 }

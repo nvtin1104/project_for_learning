@@ -11,6 +11,8 @@ Router.delete('/:id', [verifyToken, verifyAdmin], UsersController.handleDeleteUs
 Router.get('/:id', verifyToken, UsersController.handleGetUserById);
 Router.patch('/current', verifyToken, UsersController.handleUpdateCurrentUser);
 Router.patch('/change-password', verifyToken, UsersController.handleChangePassword);
+Router.post('/reset-password', UsersController.handleResetPassword);
+
 Router.patch('/:id', [verifyToken, verifyAdmin], UsersController.handleUpdateUserById);
 
 export const APIUsers = Router;

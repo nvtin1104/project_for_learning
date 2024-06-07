@@ -13,8 +13,8 @@ const handleAsyncThunk = async (asyncFunction, args, { rejectWithValue }) => {
 export const login = createAsyncThunk('auth/login', (data, thunkAPI) => handleAsyncThunk(AuthService.login, [data], thunkAPI));
 export const register = createAsyncThunk('auth/register', (data, thunkAPI) => handleAsyncThunk(AuthService.register, [data], thunkAPI));
 export const getOTP = createAsyncThunk('auth/getOTP', (data, thunkAPI) => handleAsyncThunk(AuthService.getOTP, [data], thunkAPI));
-export const changePassword = createAsyncThunk('auth/changePassword', (data, thunkAPI) =>
-  handleAsyncThunk(AuthService.changePassword, [data], thunkAPI)
+export const resetPassword = createAsyncThunk('auth/resetPassword', (data, thunkAPI) =>
+  handleAsyncThunk(AuthService.resetPassword, [data], thunkAPI)
 );
 export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', (_, thunkAPI) =>
   handleAsyncThunk(AuthService.getCurrent, [null], thunkAPI)
@@ -45,7 +45,7 @@ const authSlice = createSlice({
       state.statusRegister = 'idle';
       state.statusOTP = 'idle';
       state.otp = null;
-      state.statusChange = 'idle';
+      state.statusReset = 'idle';
       state.change = null;
     },
     resetStateLogin: (state) => {
@@ -62,8 +62,8 @@ const authSlice = createSlice({
       state.statusOTP = 'idle';
       state.otp = null;
     },
-    resetChangePassword: (state) => {
-      state.statusChange = 'idle';
+    resetStatusPassword: (state) => {
+      state.statusReset = 'idle';
       state.change = null;
     }
   },
@@ -113,15 +113,15 @@ const authSlice = createSlice({
         state.statusOTP = 'failed';
         state.error = payload;
       })
-      .addCase(changePassword.fulfilled, (state, { payload }) => {
-        state.statusChange = 'success';
-        state.change = payload;
+      .addCase(resetPassword.fulfilled, (state, { payload }) => {
+        state.statusReset = 'success';
+        state.reset = payload;
       })
-      .addCase(changePassword.pending, (state) => {
-        state.statusChange = 'loading';
+      .addCase(resetPassword.pending, (state) => {
+        state.statusReset = 'loading';
       })
-      .addCase(changePassword.rejected, (state, { payload }) => {
-        state.statusChange = 'failed';
+      .addCase(resetPassword.rejected, (state, { payload }) => {
+        state.statusReset = 'failed';
         state.error = payload;
       })
       .addCase(loginWithGG.fulfilled, (state, { payload }) => {
@@ -138,7 +138,7 @@ const authSlice = createSlice({
   }
 });
 export const { resetOTP } = authSlice.actions;
-export const { resetChangePassword } = authSlice.actions;
+export const { resetStatusPassword } = authSlice.actions;
 export const { resetRegister } = authSlice.actions;
 export const { resetStateLogin } = authSlice.actions;
 export const { resetState: resetAuthAction } = authSlice.actions;
