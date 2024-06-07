@@ -21,7 +21,7 @@ export const verifyToken = (req, res, next) => {
       if (err.name === 'TokenExpiredError') {
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Token expired' });
       } else {
-        return res.status(StatusCodes.FORBIDDEN).json({ message: 'Unauthorized' });
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
       }
     }
     req.user = user
@@ -32,7 +32,7 @@ export const verifyToken = (req, res, next) => {
 export const verifyAdmin = (req, res, next) => {
   const { role } = req.user
   if (role !== 'admin')
-    return res.status(StatusCodes.FORBIDDEN).json({
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       message: 'You not admin'
     })
   next()

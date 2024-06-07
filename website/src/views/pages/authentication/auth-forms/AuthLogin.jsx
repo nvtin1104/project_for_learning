@@ -55,8 +55,10 @@ const AuthLogin = ({ ...others }) => {
       handleToast('success', 'Login success full');
       localStorage.setItem('token', data.accssesToken);
       navigate('/', { state: { login: true } });
+    } else if (status === 'failed') {
+      handleToast('error', error.error);
     }
-  }, [status]);
+  }, [status, error]);
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {

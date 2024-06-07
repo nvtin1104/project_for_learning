@@ -14,9 +14,9 @@ const UsersService = {
   createUser: (data) => handleRequest('post', 'users', data),
   getAll: () => handleRequest('get', 'users'),
   getMe: () => handleRequest('get', 'users/current'),
-  update: (id, data) => handleRequest('patch', `users/${id}`, data),
+  update: (data) => handleRequest('patch', `users/current`, data),
   getUserById: (id) => handleRequest('get', `users/${id}`),
-  updatePassword: (id, data) => handleRequest('patch', `users/password/${id}`, data),
+  updatePassword: (data) => handleRequest('patch', `users/change-password`, data),
   delete: (id) => handleRequest('delete', `users/${id}`)
 };
 

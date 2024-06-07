@@ -27,144 +27,188 @@ import { Formik } from 'formik';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { handleToast } from 'utils/toast';
 // assets
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-import Google from 'assets/images/icons/social-google.svg';
+import { useFormik } from 'formik';
 import { login } from 'store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import ProfileCard from './ProfileCard';
+import TextField from '@mui/material/TextField';
+import * as yup from 'yup';
+import MenuItem from '@mui/material/MenuItem';
+import { Select } from '@mui/material';
+import { resetStateUpdate, updateUser } from 'store/slices/usersSlice';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
+
+const profileSchema = yup.object().shape({
+  name: yup
+    .string()
+    .typeError('Name must be string')
+    .required('Name is required')
+    .min(3, 'Name must be at least 3 characters')
+    .max(255, 'Name must be at most 255 characters'),
+  email: yup.string().email('Enter a valid email').required('Email is required').max(255, 'Email must be at most 255 characters'),
+  birthday: yup.date().typeError('Birthday must be a date').required('Birthday is required')
+});
 
 const ProfileEditForm = ({ ...others }) => {
   const theme = useTheme();
   const [isSubmit, setSubmit] = useState(false);
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch();
+  const [gender, setGender] = useState('');
+  const [type, setType] = useState('');
   const customization = useSelector((state) => state.customization);
-  const status = useSelector((state) => state.auth.status);
-  const error = useSelector((state) => state.auth.error);
-  const data = useSelector((state) => state.auth.user);
-  const [checked, setChecked] = useState(true);
+  const error = useSelector((state) => state.user.error);
+  const status = useSelector((state) => state.user.statusUpdate);
+  useEffect(() => {
+    if (status === 'success') {
+      handleToast('success', 'Profile updated');
+      dispatch(resetStateUpdate());
+      setSubmit(false);
+    } else if (status === 'failed') {
+      handleToast('error', error.error);
+      setSubmit(false);
+    }
+  }, [status, error]);
   const googleHandler = async () => {
     console.error('Login');
   };
-  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
   useEffect(() => {
-    if (status === 'success') {
-      handleToast('success', 'Login success full');
-      localStorage.setItem('token', data.accssesToken);
-      navigate('/', { state: { login: true } });
+    if (user) {
+      setGender(user.gender);
+      setType(user.type);
     }
-  }, [status]);
+  }, [user]);
+  const formik = useFormik({
+    initialValues: {
+      name: user.name,
+      email: user.email,
+      birthday: user.birthday || '2000-01-01'
+    },
+    validationSchema: profileSchema,
+    onSubmit: (values) => {
+      values.gender = gender;
+      values.type = type;
+      dispatch(updateUser(values));
+      setSubmit(true);
+    }
+  });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-  const handleSubmit = (values, { setErrors, setStatus }) => {
-    dispatch(login(values));
-  };
   return (
     <>
-      <Grid container direction="column" justifyContent="center" spacing={2}>
-        <Grid item xs={12} container>
-          <Formik
-            initialValues={{
-              username: '',
-              password: ''
-            }}
-            validationSchema={Yup.object().shape({
-              username: Yup.string().max(255).required('Username is required'),
-              password: Yup.string().max(255).required('Password is required')
-            })}
-            onSubmit={handleSubmit}
-          >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-              <form noValidate onSubmit={handleSubmit} {...others}>
-                <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                  <InputLabel htmlFor="outlined-adornment-email-login">Username</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-email-login"
-                    type="username"
-                    value={values.username}
-                    name="username"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Username"
-                    inputProps={{}}
-                  />
-                  {touched.username && errors.username && (
-                    <FormHelperText error id="standard-weight-helper-text-username-login">
-                      {errors.username}
-                    </FormHelperText>
-                  )}
-                </FormControl>
+      <form
+        style={{
+          width: '100%'
+        }}
+        onSubmit={formik.handleSubmit}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <ProfileCard />
+          </Grid>
 
-                <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
-                  <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password-login"
-                    type={showPassword ? 'text' : 'password'}
-                    value={values.password}
-                    name="password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                          size="large"
-                        >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Password"
-                    inputProps={{}}
-                  />
-                  {touched.password && errors.password && (
-                    <FormHelperText error id="standard-weight-helper-text-password-login">
-                      {errors.password}
-                    </FormHelperText>
-                  )}
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={1}>
+              <Grid
+                item
+                md={4}
+                sx={{
+                  height: 'auto',
+                  m: 0
+                }}
+              >
+                <TextField fullWidth label="Username" value={formik.values.name} disabled />
+              </Grid>
+              <Grid
+                item
+                md={8}
+                sx={{
+                  height: 'auto',
+                  m: 0
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
+                />
+              </Grid>
+              <Grid item md={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
+              </Grid>
+              <Grid item md={6}>
+                <TextField
+                  fullWidth
+                  label="Birthday"
+                  type="date"
+                  name="birthday"
+                  value={formik.values.birthday}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+                  helperText={formik.touched.birthday && formik.errors.birthday}
+                />
+              </Grid>
+              <Grid item md={6}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-gender-label">Gender</InputLabel>
+                  <Select
+                    labelId="demo-simple-gender-label"
+                    id="demo-simple-gender"
+                    label="Gender"
+                    value={gender}
+                    onChange={(event) => setGender(event.target.value)}
+                  >
+                    <MenuItem value={''}>None</MenuItem>
+                    <MenuItem value={'men'}>Men</MenuItem>
+                    <MenuItem value={'women'}>Women</MenuItem>
+                    <MenuItem value={'other'}>Other</MenuItem>
+                  </Select>
                 </FormControl>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
-                    }
-                    label="Remember me"
-                  />
-                  <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                    Forgot Password?
-                  </Typography>
-                </Stack>
-                {errors.submit && (
-                  <Box sx={{ mt: 3 }}>
-                    <FormHelperText error>{errors.submit}</FormHelperText>
-                  </Box>
-                )}
-
-                <Box sx={{ mt: 2 }}>
-                  <AnimateButton>
-                    <Button disableElevation disabled={isSubmit} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                      Sign in
-                    </Button>
-                  </AnimateButton>
-                </Box>
-              </form>
-            )}
-          </Formik>
+              </Grid>
+              <Grid item md={6}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-type-label">Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-type-label"
+                    id="demo-simple-type"
+                    label="Age"
+                    name={'type'}
+                    value={type}
+                    onChange={(event) => setType(event.target.value)}
+                  >
+                    <MenuItem value={''}>None</MenuItem>
+                    <MenuItem value={'student'}>Student</MenuItem>
+                    <MenuItem value={'teacher'}>Teacher</MenuItem>
+                    <MenuItem value={'parent'}>Parent</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Box sx={{ mt: 2 }}>
+                <AnimateButton>
+                  <Button disableElevation disabled={isSubmit} size="large" type="submit" variant="contained" color="secondary">
+                    Save
+                  </Button>
+                </AnimateButton>
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
-      </Grid>
+      </form>
     </>
   );
 };

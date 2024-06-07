@@ -1,4 +1,4 @@
-import {handleCreatePassword} from '~/utils/handlePassword'
+import { handleComparePassword, handleCreatePassword } from '~/utils/handlePassword';
 import {UserModel} from '../models/usersModel'
 import {ObjectId} from 'mongodb'
 import {createResfeshToken, createToken} from '~/middlewares/auth'
@@ -42,6 +42,26 @@ const getUserById = async (id) => {
     throw new Error(error)
   }
 }
+const changePassword = async (id, data) => {
+  try {
+    const user = await UserModel.getUserChangePassword(new ObjectId(id), '_id')
+    if (!user) {
+      throw 'User not found'
+    }
+    const checkPassword = await handleComparePassword(data.oldPassword, user.password);
+    if (!checkPassword) {
+      throw 'Old password is incorrect'
+    }
+    if (data.newPassword === data.oldPassword){
+      throw 'New password must be different from old password'
+    }
+    const newPassword = await handleCreatePassword(data.newPassword)
+    return await UserModel.changePassword(id, newPassword)
+  } catch (error) {
+    throw new Error(error)
+  }
+
+}
 const updateUserById = async (id, data) => {
   try {
     const user = await UserModel.getUserBy(new ObjectId(id), '_id')
@@ -68,5 +88,6 @@ export const UsersService = {
   getAll,
   deleteUserById,
   getUserById,
-  updateUserById
+  updateUserById,
+  changePassword
 }

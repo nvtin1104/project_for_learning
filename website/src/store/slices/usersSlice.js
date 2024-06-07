@@ -18,14 +18,12 @@ export const fetchAllUsers = createAsyncThunk('users/fetchAllUsers', (_, thunkAP
   handleAsyncThunk(UsersService.getAll, [null], thunkAPI)
 );
 export const fetchMe = createAsyncThunk('users/fetchMe', (_, thunkAPI) => handleAsyncThunk(UsersService.getMe, [null], thunkAPI));
-export const updateUser = createAsyncThunk('users/updateUser', ({ id, data }, thunkAPI) =>
-  handleAsyncThunk(UsersService.update, [id, data], thunkAPI)
-);
+export const updateUser = createAsyncThunk('users/updateUser', (data, thunkAPI) => handleAsyncThunk(UsersService.update, [data], thunkAPI));
 export const getUserById = createAsyncThunk('users/getById', ({ id }, thunkAPI) =>
   handleAsyncThunk(UsersService.getUserById, [id], thunkAPI)
 );
-export const updatePassword = createAsyncThunk('users/updatePassword', ({ userId, data }, thunkAPI) =>
-  handleAsyncThunk(UsersService.updatePassword, [userId, data], thunkAPI)
+export const updatePassword = createAsyncThunk('users/updatePassword', (data, thunkAPI) =>
+  handleAsyncThunk(UsersService.updatePassword, [data], thunkAPI)
 );
 export const deleteUser = createAsyncThunk('users/deleteUser', (userId, thunkAPI) =>
   handleAsyncThunk(UsersService.delete, [userId], thunkAPI)
@@ -51,6 +49,7 @@ const usersSlice = createSlice({
     resetStateUpdate: (state) => {
       state.error = null;
       state.statusUpdate = 'idle';
+      state.statusPassword = 'idle';
     },
     resetStateUpdatePassword: (state) => {
       state.error = null;
@@ -148,7 +147,7 @@ const usersSlice = createSlice({
 });
 
 export const { resetState: resetStateAction } = usersSlice.actions;
-export const { resetStateUpdate: resetStateUpdateAction } = usersSlice.actions;
+export const { resetStateUpdate } = usersSlice.actions;
 export const { resetStateUpdatePassword: resetStateUpdatePasswordAction } = usersSlice.actions;
 export const { resetStateDelete: resetStateDeleteAction } = usersSlice.actions;
 export default usersSlice.reducer;

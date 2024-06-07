@@ -76,11 +76,37 @@ const handleUpdateUserById = async (req, res) => {
     try {
         const id = req.params.id
         const data = req.body
+        const user = req.user
+        console.log(user)
         const updatedUser = await UsersService.updateUserById(id, data)
         res.status(StatusCodes.OK).json(updatedUser)
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: error.message})
     }
+}
+const handleUpdateCurrentUser = async (req, res) => {
+    try {
+        const data = req.body
+        const user = req.user
+        const updatedUser = await UsersService.updateUserById(user.userId, data)
+        res.status(StatusCodes.OK).json(updatedUser)
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: error.message})
+    }
+}
+const handleChangePassword = async (req, res) => {
+    try {
+        const data = req.body
+        const user = req.user
+        const result = await UsersService.changePassword(user.userId, data)
+        res.status(StatusCodes.OK).json({
+            message: 'Password changed successfully',
+            result
+        })
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: error.message})
+    }
+
 }
 export const UsersController = {
     handleCreateUser,
@@ -88,5 +114,7 @@ export const UsersController = {
     handleDeleteUserById,
     handleGetUserById,
     handleUpdateUserById,
-    handleGetCurrentUser
+    handleGetCurrentUser,
+    handleUpdateCurrentUser,
+    handleChangePassword
 }

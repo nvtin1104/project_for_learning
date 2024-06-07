@@ -94,7 +94,7 @@ const MainLayout = () => {
     } else {
       navigate('/login');
     }
-  }, [token, navigate]);
+  }, [token, navigate, user]);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

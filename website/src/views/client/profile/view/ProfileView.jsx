@@ -6,7 +6,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Card from '@mui/material/Card';
 import ProfileEditForm from '../common/ProfileEditForm';
-
+import PasswordEditForm from '../common/PasswordEditForm';
 export default function ProfileView() {
   const [value, setValue] = React.useState('1');
 
@@ -34,7 +34,9 @@ export default function ProfileView() {
         <TabPanel value="1">
           <ProfileEditForm />
         </TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="2">
+          <PasswordEditForm />
+        </TabPanel>
       </TabContext>
     </Card>
   );

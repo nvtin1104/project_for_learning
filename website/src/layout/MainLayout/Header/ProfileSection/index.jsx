@@ -36,6 +36,7 @@ import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
+import { handleToast } from 'utils/toast';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -57,6 +58,7 @@ const ProfileSection = () => {
   const handleLogout = async () => {
     localStorage.removeItem('token');
     navigate('/login');
+    handleToast('success', 'Logout successfully');
     dispatch(resetStateLogin());
   };
 
