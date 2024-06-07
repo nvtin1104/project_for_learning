@@ -12,7 +12,6 @@ const handleAsyncThunk = async (asyncFunction, args, { rejectWithValue }) => {
 
 export const login = createAsyncThunk('auth/login', (data, thunkAPI) => handleAsyncThunk(AuthService.login, [data], thunkAPI));
 export const register = createAsyncThunk('auth/register', (data, thunkAPI) => handleAsyncThunk(AuthService.register, [data], thunkAPI));
-export const getOTP = createAsyncThunk('auth/getOTP', (data, thunkAPI) => handleAsyncThunk(AuthService.getOTP, [data], thunkAPI));
 export const resetPassword = createAsyncThunk('auth/resetPassword', (data, thunkAPI) =>
   handleAsyncThunk(AuthService.resetPassword, [data], thunkAPI)
 );
@@ -51,16 +50,13 @@ const authSlice = createSlice({
     resetStateLogin: (state) => {
       state.error = null;
       state.status = 'idle';
+      state.statusGG = 'idle';
       state.user = {};
     },
     resetRegister: (state) => {
       state.error = null;
       state.statusRegister = 'idle';
       state.user = {};
-    },
-    resetOTP: (state) => {
-      state.statusOTP = 'idle';
-      state.otp = null;
     },
     resetStatusPassword: (state) => {
       state.statusReset = 'idle';
@@ -102,17 +98,6 @@ const authSlice = createSlice({
         state.statusRegister = 'failed';
         state.error = payload;
       })
-      .addCase(getOTP.fulfilled, (state, { payload }) => {
-        state.statusOTP = 'success';
-        state.otp = payload;
-      })
-      .addCase(getOTP.pending, (state) => {
-        state.statusOTP = 'loading';
-      })
-      .addCase(getOTP.rejected, (state, { payload }) => {
-        state.statusOTP = 'failed';
-        state.error = payload;
-      })
       .addCase(resetPassword.fulfilled, (state, { payload }) => {
         state.statusReset = 'success';
         state.reset = payload;
@@ -125,19 +110,18 @@ const authSlice = createSlice({
         state.error = payload;
       })
       .addCase(loginWithGG.fulfilled, (state, { payload }) => {
-        state.status = 'success';
+        state.statusGG = 'success';
         state.user = payload;
       })
       .addCase(loginWithGG.pending, (state) => {
-        state.status = 'loading';
+        state.statusGG = 'loading';
       })
       .addCase(loginWithGG.rejected, (state, { payload }) => {
-        state.status = 'failed';
+        state.statusGG = 'failed';
         state.error = payload;
       });
   }
 });
-export const { resetOTP } = authSlice.actions;
 export const { resetStatusPassword } = authSlice.actions;
 export const { resetRegister } = authSlice.actions;
 export const { resetStateLogin } = authSlice.actions;

@@ -6,12 +6,13 @@ async function handleRequest(method, url, data) {
 
 const LessonsService = {
   getAllActiveLessons: ({ limit, page, topicId }) => {
-    if(topicId){
+    if (topicId) {
       return handleRequest('get', `/lessons/all?limit=${limit}&page=${page}&topicId=${topicId}`);
     }
     return handleRequest('get', `/lessons/all?limit=${limit}&page=${page}`);
   },
   getLessonById: (id) => handleRequest('get', `/lessons/${id}`),
+  getLessonsByUserId: () => handleRequest('get', '/lessons/user')
 };
 
 export default LessonsService;

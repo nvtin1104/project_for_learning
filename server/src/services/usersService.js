@@ -1,7 +1,7 @@
 import { handleComparePassword, handleCreatePassword, randomPassword } from '~/utils/handlePassword';
 import { UserModel } from '../models/usersModel';
 import { ObjectId } from 'mongodb';
-import { createResfeshToken, createToken } from '~/middlewares/auth';
+import { createRefreshToken, createToken } from '~/middlewares/auth';
 import { emailRegex } from '~/utils/regex';
 import { resetPasswordTemplate } from '~/utils/mailTemplate';
 import { handleSendMail } from '~/utils/nodemailer';
@@ -13,7 +13,7 @@ const createUser = async (data) => {
       throw 'Username is already taken';
     }
     data.password = await handleCreatePassword(data.password);
-    data.refreshToken = createResfeshToken({ username: data.username, role: 'user' });
+    data.refreshToken = createRefreshToken({ username: data.username, role: 'user' });
 
     const newUser = await UserModel.create(data);
     data.accessToken = createToken({ username: data.username, role: 'user', userId: newUser._id });
@@ -71,7 +71,7 @@ const resetPassword = async (data) => {
       random,
       email
     } = await checkEmail(data);
-    const resetTemplate = resetPasswordTemplate(email, random);
+    const resetTemplate =  resetPasswordTemplate(email, random);
     return await handleSendMail({
       to: email,
       subject: 'Reset password',
@@ -133,6 +133,7 @@ const checkEmail = async (data) => {
     };
   }
 };
+
 export const UsersService = {
   createUser,
   getAll,
@@ -140,5 +141,5 @@ export const UsersService = {
   getUserById,
   updateUserById,
   changePassword,
-  resetPassword
+  resetPassword,
 };

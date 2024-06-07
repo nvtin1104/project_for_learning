@@ -3,12 +3,25 @@ import { Typography } from '@mui/material';
 
 // project imports
 import NavGroup from './NavGroup';
-import menuItem from 'layout/menu-items';
+import { dashboardItems, clientItems } from 'layout/menu-items';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
-  const navItems = menuItem.items.map((item) => {
+  const { pathname } = useLocation();
+  const [menuItems, setMenuItems] = useState(clientItems);
+  useEffect(() => {
+    const paths = pathname.split('/');
+    if (paths[1] === 'dashboard') {
+      setMenuItems(dashboardItems);
+    } else {
+      setMenuItems(clientItems);
+    }
+  }, [pathname]);
+  console.log(pathname.split('/'));
+  const navItems = menuItems.items.map((item) => {
     switch (item.type) {
       case 'group':
         return <NavGroup key={item.id} item={item} />;

@@ -27,11 +27,8 @@ import { Formik } from 'formik';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { handleToast } from 'utils/toast';
 // assets
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import Google from 'assets/images/icons/social-google.svg';
-import { login, resetPassword } from 'store/slices/authSlice';
+import { resetPassword, resetStatusPassword } from 'store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../ui-component/Loader';
 
@@ -49,15 +46,15 @@ const AuthForgotPassword = ({ ...others }) => {
     if (status === 'success') {
       setSubmit(false);
       handleToast('success', 'New password has been sent to your email.');
+      navigate('/login', { state: { reset: true } });
+      dispatch(resetStatusPassword());
     } else if (status === 'failed') {
+      dispatch(resetStatusPassword());
       setSubmit(false);
       handleToast('error', error.error);
     }
   }, [status, error]);
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
   const handleSubmit = (values) => {
     setSubmit(true);
     dispatch(resetPassword(values));

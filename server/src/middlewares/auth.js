@@ -6,7 +6,7 @@ export const createToken = ({ username, role, userId }) => {
     expiresIn: 60 * 60 * 24
   })
 }
-export const createResfeshToken = ({ username, role }) => {
+export const createRefreshToken = ({ username, role }) => {
   return jwt.sign({ username, role }, env.TOKEN_SECRET, {
     expiresIn: 60 * 60 * 24 * 7
   })

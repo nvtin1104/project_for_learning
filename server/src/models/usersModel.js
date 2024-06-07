@@ -113,6 +113,14 @@ const changePassword = async (id, password) => {
   }
 
 };
+const updateToken = async (username, refreshToken) => {
+  try {
+    const db = await GET_DB()
+    return  await db.collection('users').updateOne({ username }, { $set: { refreshToken: refreshToken } })
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 export const UserModel = {
   create,
   getAll,
@@ -120,5 +128,6 @@ export const UserModel = {
   deleteUserById,
   update,
   getUserChangePassword,
-  changePassword
+  changePassword,
+  updateToken
 };

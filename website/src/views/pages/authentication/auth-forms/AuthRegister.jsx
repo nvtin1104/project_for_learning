@@ -34,6 +34,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { handleToast } from '../../../../utils/toast';
+import AuthLoginGG from './AuthLoginGG';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
@@ -76,7 +77,8 @@ const AuthRegister = ({ ...others }) => {
       navigate('/login');
     } else if (status === 'failed') {
       setSubmit(false);
-      handleToast('error', error.error);
+      console.log(error);
+      // handleToast('error', error.error);
     }
   }, [status, error]);
   const handleSubmit = (values) => {
@@ -91,24 +93,7 @@ const AuthRegister = ({ ...others }) => {
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
         <Grid item xs={12}>
-          <AnimateButton>
-            <Button
-              variant="outlined"
-              fullWidth
-              onClick={googleHandler}
-              size="large"
-              sx={{
-                color: 'grey.700',
-                backgroundColor: theme.palette.grey[50],
-                borderColor: theme.palette.grey[100]
-              }}
-            >
-              <Box sx={{ mr: { xs: 1, sm: 2, width: 20 } }}>
-                <img src={Google} alt="google" width={16} height={16} style={{ marginRight: matchDownSM ? 8 : 16 }} />
-              </Box>
-              Sign up with Google
-            </Button>
-          </AnimateButton>
+          <AuthLoginGG matchDownSM={matchDownSM} theme={theme} handleDispatch={dispatch} navigate={navigate} />
         </Grid>
         <Grid item xs={12}>
           <Box sx={{ alignItems: 'center', display: 'flex' }}>

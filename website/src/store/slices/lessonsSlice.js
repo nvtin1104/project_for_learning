@@ -2,30 +2,33 @@ import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import LessonsService from '../../services/lessons.service';
 async function handleRequest(request, arg, thunkAPI) {
   try {
-    const response = await request(arg);
-    return response;
+    return await request(arg);
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response.data);
   }
 }
-export const handleGetAllActiveLessons = createAsyncThunk(
-  'lessons/getAllActiveLessons',
-  ({ page, limit, topicId }, thunkAPI) => handleRequest(LessonsService.getAllActiveLessons, { page, limit, topicId }, thunkAPI)
+export const handleGetAllActiveLessons = createAsyncThunk('lessons/getAllActiveLessons', ({ page, limit, topicId }, thunkAPI) =>
+  handleRequest(LessonsService.getAllActiveLessons, { page, limit, topicId }, thunkAPI)
 );
-export const handleGetLessonsById = createAsyncThunk(
-  'search/lessonsById',
-  ({ id }, thunkAPI) => handleRequest(LessonsService.getLessonById, id, thunkAPI)
+export const handleGetLessonsByUserId = createAsyncThunk('lessons/getByUserId', (_, thunkAPI) =>
+  handleRequest(LessonsService.getLessonsByUserId, {}, thunkAPI)
 );
-export const resetState = createAction('lessons/resetState');
+export const handleGetLessonsById = createAsyncThunk('search/lessonsById', ({ id }, thunkAPI) =>
+  handleRequest(LessonsService.getLessonById, id, thunkAPI)
+);
+export const handleDeleteLessonById = createAsyncThunk('lessons/deleteLessonById', ({ id }, thunkAPI) =>
+  handleRequest(LessonsService.getLessonById, id, thunkAPI)
+);
 
-export const resetStatus = createAction('lessons/resetStatus');
 const lessonsSlice = createSlice({
   name: 'lessons',
   initialState: {
     data: null,
     status: 'idle',
+    statusGetByUserId: 'idle',
     error: null,
-    lesson: null
+    lesson: null,
+    dataOfUser: null
   },
   reducers: {
     resetState: (state) => {
@@ -35,7 +38,7 @@ const lessonsSlice = createSlice({
     },
     resetStatus: (state) => {
       state.status = null;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -49,7 +52,19 @@ const lessonsSlice = createSlice({
       .addCase(handleGetAllActiveLessons.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-      }).addCase(handleGetLessonsById.pending, (state) => {
+      })
+      .addCase(handleGetLessonsByUserId.pending, (state) => {
+        state.statusGetByUserId = 'loading';
+      })
+      .addCase(handleGetLessonsByUserId.fulfilled, (state, action) => {
+        state.statusGetByUserId = 'success';
+        state.dataOfUser = action.payload;
+      })
+      .addCase(handleGetLessonsByUserId.rejected, (state, action) => {
+        state.statusGetByUserId = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(handleGetLessonsById.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(handleGetLessonsById.fulfilled, (state, action) => {
@@ -59,8 +74,19 @@ const lessonsSlice = createSlice({
       .addCase(handleGetLessonsById.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(handleDeleteLessonById.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(handleDeleteLessonById.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.lesson = action.payload;
+      })
+      .addCase(handleDeleteLessonById.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
-  },
+  }
 });
 
 export default lessonsSlice.reducer;

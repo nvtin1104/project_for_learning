@@ -25,7 +25,7 @@ const pages = {
       breadcrumbs: false
     },
     {
-      id: 'topic',
+      id: 'lessons',
       title: 'Lessons',
       type: 'item',
       url: '/lessons',

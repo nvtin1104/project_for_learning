@@ -1,4 +1,80 @@
-export const resetPasswordTemplate = (name, password) => {
+export const resetPasswordTemplate =  (name, password) => {
+  return mailTemplate(`
+      <div class="content">
+              <!-- START CENTERED WHITE CONTAINER -->
+              <span class="preheader">Reset your password</span>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
+                <!-- START MAIN CONTENT AREA -->
+                <tr>
+                  <td class="wrapper">
+                    <p>Hi ${name},</p>
+                    <p>This is your new password: ${password}</p>
+                  
+                    <p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
+                    <p>Thanks,<br>Your Company Team</p>
+                  </td>
+                </tr>
+                <!-- END MAIN CONTENT AREA -->
+              </table>
+              <!-- START FOOTER -->
+              <div class="footer">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="content-block">
+                      <span class="apple-link">Company Inc, 7-11 Commercial Ct, Belfast BT1 2NB</span>
+                      <br> Don't like these emails? <a href="http://htmlemail.io/blog">Unsubscribe</a>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="content-block powered-by">
+                      Powered by <a href="http://htmlemail.io">HTMLemail.io</a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- END FOOTER -->
+              <!-- END CENTERED WHITE CONTAINER -->
+            </div>`)
+}
+export const passwordForGG = async (name, password) => {
+  return mailTemplate(`
+      <div class="content">
+              <!-- START CENTERED WHITE CONTAINER -->
+              <span class="preheader">Reset your password</span>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
+                <!-- START MAIN CONTENT AREA -->
+                <tr>
+                  <td class="wrapper">
+                    <p>Hi ${name},</p>
+                    <p>You have created  account with Gmail</p>
+                    <p>This is your new username: ${name}</p>
+                    <p>This is your new password: ${password}</p>
+                  
+                  </td>
+                </tr>
+                <!-- END MAIN CONTENT AREA -->
+              </table>
+              <!-- START FOOTER -->
+              <div class="footer">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="content-block">
+                      <span class="apple-link">Company Inc, 7-11 Commercial Ct, Belfast BT1 2NB</span>
+                      <br> Don't like these emails? <a href="http://htmlemail.io/blog">Unsubscribe</a>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="content-block powered-by">
+                      Powered by <a href="http://htmlemail.io">HTMLemail.io</a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- END FOOTER -->
+              <!-- END CENTERED WHITE CONTAINER -->
+            </div>`)
+}
+ const mailTemplate = (content) => {
   return `
   <!doctype html>
   <html lang="en">
@@ -224,41 +300,7 @@ export const resetPasswordTemplate = (name, password) => {
         <tr>
           <td>&nbsp;</td>
           <td class="container">
-            <div class="content">
-              <!-- START CENTERED WHITE CONTAINER -->
-              <span class="preheader">Reset your password</span>
-              <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
-                <!-- START MAIN CONTENT AREA -->
-                <tr>
-                  <td class="wrapper">
-                    <p>Hi ${name},</p>
-                    <p>This is your new password: ${password}</p>
-                  
-                    <p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
-                    <p>Thanks,<br>Your Company Team</p>
-                  </td>
-                </tr>
-                <!-- END MAIN CONTENT AREA -->
-              </table>
-              <!-- START FOOTER -->
-              <div class="footer">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td class="content-block">
-                      <span class="apple-link">Company Inc, 7-11 Commercial Ct, Belfast BT1 2NB</span>
-                      <br> Don't like these emails? <a href="http://htmlemail.io/blog">Unsubscribe</a>.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="content-block powered-by">
-                      Powered by <a href="http://htmlemail.io">HTMLemail.io</a>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!-- END FOOTER -->
-              <!-- END CENTERED WHITE CONTAINER -->
-            </div>
+          ${content}
           </td>
           <td>&nbsp;</td>
         </tr>
