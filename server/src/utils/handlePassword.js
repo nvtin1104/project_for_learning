@@ -14,7 +14,6 @@ export const handleCreatePassword = async (password) => {
 }
 export const handleComparePassword = async (password, hash) => {
   try {
-    console.log(password,hash)
     return await bcrypt.compare(password, hash)
   } catch (error) {
     // Handle error in a different way

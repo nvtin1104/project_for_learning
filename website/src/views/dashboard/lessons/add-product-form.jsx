@@ -12,7 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { handleToast } from '../../utils/toast';
+import { handleToast } from 'utils/toast';
 
 const productSchema = yup.object().shape({
   title: yup.string().required('Name is required').max(255, 'Name is too long'),
@@ -23,18 +23,14 @@ const productSchema = yup.object().shape({
     .required('Limit is required')
     .min(0, 'Limit is too small')
     .max(1000, 'Limit is too large'),
-  auth: yup
-    .string()
-    .required('Author is required')
-    .max(255, 'Author is too long')
-    .min(5, 'Author is too short'),
-  type: yup.string().typeError('Type must be string').required('Type is required'),
+  auth: yup.string().required('Author is required').max(255, 'Author is too long').min(5, 'Author is too short'),
+  type: yup.string().typeError('Type must be string').required('Type is required')
 });
 
 const AddProductForm = ({ handleGetContent, topic }) => {
   AddProductForm.propTypes = {
     handleGetContent: PropTypes.func,
-    topic: PropTypes.array,
+    topic: PropTypes.array
   };
   const formik = useFormik({
     initialValues: {
@@ -42,7 +38,7 @@ const AddProductForm = ({ handleGetContent, topic }) => {
       auth: '',
       description: '',
       type: 'test',
-      limit: '',
+      limit: ''
     },
     validationSchema: productSchema,
     onSubmit: (values) => {
@@ -51,12 +47,12 @@ const AddProductForm = ({ handleGetContent, topic }) => {
       } else {
         const category = {
           topicId: selectedTopic,
-          subject: selectedSubject,
+          subject: selectedSubject
         };
         values.category = category;
         handleGetContent(values);
       }
-    },
+    }
   });
   const [selectedTopic, setSelectedTopic] = React.useState('');
   const [subject, setSubject] = React.useState([]);
@@ -75,7 +71,7 @@ const AddProductForm = ({ handleGetContent, topic }) => {
   return (
     <Card
       sx={{
-        p: 3,
+        p: 3
       }}
     >
       <form onSubmit={formik.handleSubmit}>
@@ -83,55 +79,37 @@ const AddProductForm = ({ handleGetContent, topic }) => {
           <Typography variant="h4" sx={{ mb: 5 }}>
             Lesson Info
           </Typography>
-          <TextField
-            name="title"
-            label="Title"
-            value={formik.values.title}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <TextField name="title" label="Title" value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur} />
           {formik.touched.title && formik.errors.title && (
             <p
               style={{
                 color: 'red',
                 fontSize: '12px',
-                margin: '0',
+                margin: '0'
               }}
             >
               {formik.errors.title}
             </p>
           )}
-          <TextField
-            name="auth"
-            label="Auth"
-            value={formik.values.auth}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <TextField name="auth" label="Auth" value={formik.values.auth} onChange={formik.handleChange} onBlur={formik.handleBlur} />
           {formik.touched.auth && formik.errors.auth && (
             <p
               style={{
                 color: 'red',
                 fontSize: '12px',
-                margin: '0',
+                margin: '0'
               }}
             >
               {formik.errors.auth}
             </p>
           )}
-          <TextField
-            name="limit"
-            label="Limit"
-            value={formik.values.limit}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <TextField name="limit" label="Limit" value={formik.values.limit} onChange={formik.handleChange} onBlur={formik.handleBlur} />
           {formik.touched.limit && formik.errors.limit && (
             <p
               style={{
                 color: 'red',
                 fontSize: '12px',
-                margin: '0',
+                margin: '0'
               }}
             >
               {formik.errors.limit}
@@ -149,7 +127,7 @@ const AddProductForm = ({ handleGetContent, topic }) => {
               style={{
                 color: 'red',
                 fontSize: '12px',
-                margin: '0',
+                margin: '0'
               }}
             >
               {formik.errors.description}
@@ -176,7 +154,7 @@ const AddProductForm = ({ handleGetContent, topic }) => {
               style={{
                 color: 'red',
                 fontSize: '12px',
-                margin: '0',
+                margin: '0'
               }}
             >
               {formik.errors.type}
@@ -220,14 +198,7 @@ const AddProductForm = ({ handleGetContent, topic }) => {
           )}
         </Stack>
 
-        <LoadingButton
-          sx={{ mt: 1 }}
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          color="inherit"
-        >
+        <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="inherit">
           Save
         </LoadingButton>
       </form>

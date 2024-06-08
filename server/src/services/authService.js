@@ -5,7 +5,7 @@ import { passwordForGG } from '~/utils/mailTemplate';
 import { handleSendMail } from '~/utils/nodemailer';
 
 const loginUser = async (data, role) => {
-  const user = await UserModel.getUserBy(data.username, 'username');
+  const user = await UserModel.getUserChangePassword(data.username, 'username');
   if (!user) {
     throw new Error('User not found');
   }

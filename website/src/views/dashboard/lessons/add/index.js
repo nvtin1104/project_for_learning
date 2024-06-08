@@ -1,1 +1,1 @@
-export { default as LessonsAdd } from './lessons-add';
+export { default as LessonsAdd } from './LessonAdd';

@@ -12,7 +12,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { handleToast } from '../../utils/toast';
+import { handleToast } from 'utils/toast';
 import PropTypes from 'prop-types';
 const style = {
   position: 'absolute',
@@ -23,20 +23,18 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  p: 4,
+  p: 4
 };
 export default function AddQuestion({ handleAddQuestion }) {
   AddQuestion.propTypes = {
-    handleAddQuestion: PropTypes.func,
+    handleAddQuestion: PropTypes.func
   };
   const [otion, setOption] = React.useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
     const value = Object.fromEntries(data.entries());
-    const newOption = otion.map((item) =>
-      item.option === value.right ? { ...item, isCorrect: true } : item
-    );
+    const newOption = otion.map((item) => (item.option === value.right ? { ...item, isCorrect: true } : item));
     if (value.right === undefined) {
       handleToast('error', 'Right option is required');
     } else {
@@ -73,15 +71,7 @@ export default function AddQuestion({ handleAddQuestion }) {
               <TextField fullWidth label="Question" name="question" type="text" />
             </Grid>
             <Grid item xs={12} md={4}>
-              <LoadingButton
-                sx={{ mt: 1 }}
-                fullWidth
-                size="large"
-                type="button"
-                onClick={handleOpen}
-                variant="contained"
-                color="inherit"
-              >
+              <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="button" onClick={handleOpen} variant="contained" color="inherit">
                 Add Option
               </LoadingButton>
             </Grid>
@@ -90,47 +80,23 @@ export default function AddQuestion({ handleAddQuestion }) {
             <FormLabel id="demo-radio-buttons-group-label">Options</FormLabel>
             <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="right">
               {otion.map((item, i) => (
-                <FormControlLabel
-                  key={i}
-                  value={item.option}
-                  control={<Radio />}
-                  label={item.option}
-                />
+                <FormControlLabel key={i} value={item.option} control={<Radio />} label={item.option} />
               ))}
             </RadioGroup>
           </FormControl>
         </Stack>
 
-        <LoadingButton
-          sx={{ mt: 1 }}
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          color="inherit"
-        >
+        <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="inherit">
           Add
         </LoadingButton>
       </form>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
           <form onSubmit={handleAddOption}>
             <Stack spacing={3}>
               <Typography variant="h4">Add Option</Typography>
               <TextField fullWidth label="Option" name="option" type="text" />
-              <LoadingButton
-                sx={{ mt: 1 }}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-                color="inherit"
-              >
+              <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="inherit">
                 Add
               </LoadingButton>
             </Stack>

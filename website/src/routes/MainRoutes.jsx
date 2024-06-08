@@ -13,7 +13,7 @@ const LessonDetail = Loadable(lazy(() => import('views/client/lessons/detail/Det
 const ProfilePage = Loadable(lazy(() => import('views/client/profile/view/ProfileView')));
 // sample page routing
 const LessonsView = Loadable(lazy(() => import('views/dashboard/lessons/view/ListView')));
-
+const LessonsAdd = Loadable(lazy(() => import('views/dashboard/lessons/add/LessonAdd')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -35,6 +35,10 @@ const MainRoutes = {
         {
           path: 'lessons',
           element: <LessonsView />
+        },
+        {
+          path: 'lessons/add',
+          element: <LessonsAdd />
         }
       ]
     },
