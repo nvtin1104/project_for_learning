@@ -11,40 +11,33 @@ import React, { useEffect, useState } from 'react';
 import AddQuestion from '../add-question';
 import { handleToast } from 'utils/toast';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { IconChevronDown } from '@tabler/icons-react';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
-// import { createLesson, resetCreateLesson } from 'store/slices/lessonsSlice';
+import { handleGetAllTopics, resetCreateLesson, handleCreateLesson } from 'store/slices/lessonsSlice';
 // ----------------------------------------------------------------------
 
 export default function LessonAdd() {
   const dispatch = useDispatch();
   const [question, setQuestion] = useState([]);
 
-  const dispach = useDispatch();
-  // useEffect(() => {
-  //   if (statusCreate === 'success') {
-  //     handleToast('success', 'Create successful');
-  //     setQuestion([]);
-  //   }
-  // }
   const [topic, setTopic] = useState([]);
   const statusCreate = useSelector((state) => state.lessons.statusCreate);
 
-  // useEffect(() => {
-  //   dispatch(getAllTopics()).then((res) => {
-  //     if (res.payload) {
-  //       setTopic(res.payload);
-  //     }
-  //   });
-  // }, [dispach]);
+  useEffect(() => {
+    dispatch(handleGetAllTopics()).then((res) => {
+      if (res.payload) {
+        setTopic(res.payload);
+      }
+    });
+  }, [dispatch]);
   useEffect(() => {
     if (statusCreate === 'success') {
       handleToast('success', 'Create successful');
-      // dispatch(resetCreateLesson());
+      dispatch(resetCreateLesson());
       setQuestion([]);
     } else if (statusCreate === 'failed') {
       handleToast('error', 'Create failed');
@@ -54,7 +47,7 @@ export default function LessonAdd() {
   const handleGetContent = (content) => {
     if (question.length > 0) {
       content.questions = question;
-      // dispatch(createLesson(content));
+      dispatch(handleCreateLesson({ data: content }));
     } else {
       handleToast('error', 'Please add question');
     }
@@ -77,7 +70,7 @@ export default function LessonAdd() {
       <Grid container spacing={3}>
         <Grid xs={12} md={12} lg={7}>
           <Stack spacing={2}>
-            <AddProductForm handleGetContent={handleGetContent} topic={topic} />
+            <AddProductForm handleGetContent={handleGetContent} topic={topic} status={statusCreate} />
             <Card
               sx={{
                 p: 3
@@ -87,7 +80,7 @@ export default function LessonAdd() {
                 question.map((item, index) => (
                   <Accordion key={index}>
                     <AccordionSummary
-                      expandIcon={<Iconify icon="ic:sharp-expand-more" />}
+                      expandIcon={<IconChevronDown stroke={2} />}
                       aria-controls={`panel1a-content-${index}`}
                       id={`panel1a-header-${index}`}
                     >

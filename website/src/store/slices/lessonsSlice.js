@@ -19,16 +19,25 @@ export const handleGetLessonsById = createAsyncThunk('search/lessonsById', ({ id
 export const handleDeleteLessonById = createAsyncThunk('lessons/deleteLessonById', ({ id }, thunkAPI) =>
   handleRequest(LessonsService.getLessonById, id, thunkAPI)
 );
-
+export const handleGetAllTopics = createAsyncThunk('lessons/getAllTopics', (_, thunkAPI) =>
+  handleRequest(LessonsService.getAllTopic, {}, thunkAPI)
+);
+export const handleCreateLesson = createAsyncThunk('lessons/createLesson', ({ data }, thunkAPI) =>
+  handleRequest(LessonsService.create, data, thunkAPI)
+);
 const lessonsSlice = createSlice({
   name: 'lessons',
   initialState: {
     data: null,
     status: 'idle',
     statusGetByUserId: 'idle',
+    statusTopics: 'idle',
     error: null,
     lesson: null,
-    dataOfUser: null
+    dataOfUser: null,
+    topics: null,
+    statusCreate: 'idle',
+    dataCreate: null
   },
   reducers: {
     resetState: (state) => {
@@ -38,6 +47,11 @@ const lessonsSlice = createSlice({
     },
     resetStatus: (state) => {
       state.status = null;
+    },
+    resetCreateLesson: (state) => {
+      state.statusCreate = 'idle';
+      state.dataCreate = null;
+      state.error = null;
     }
   },
   extraReducers: (builder) => {
@@ -51,6 +65,28 @@ const lessonsSlice = createSlice({
       })
       .addCase(handleGetAllActiveLessons.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(handleCreateLesson.pending, (state) => {
+        state.statusCreate = 'loading';
+      })
+      .addCase(handleCreateLesson.fulfilled, (state, action) => {
+        state.statusCreate = 'success';
+        state.dataCreate = action.payload;
+      })
+      .addCase(handleCreateLesson.rejected, (state, action) => {
+        state.statusCreate = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(handleGetAllTopics.pending, (state) => {
+        state.statusTopics = 'loading';
+      })
+      .addCase(handleGetAllTopics.fulfilled, (state, action) => {
+        state.statusTopics = 'success';
+        state.topics = action.payload;
+      })
+      .addCase(handleGetAllTopics.rejected, (state, action) => {
+        state.statusTopics = 'failed';
         state.error = action.payload;
       })
       .addCase(handleGetLessonsByUserId.pending, (state) => {
@@ -88,5 +124,5 @@ const lessonsSlice = createSlice({
       });
   }
 });
-
+export const { resetState, resetStatus, resetCreateLesson } = lessonsSlice.actions;
 export default lessonsSlice.reducer;

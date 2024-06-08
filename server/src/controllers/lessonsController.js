@@ -66,7 +66,7 @@ const handleGetLessonByUserId = async (req, res) => {
   try {
     const user = req.user
     const lessons = await LessonsService.getLessonsByUserId(user.userId)
-    res.status(StatusCodes.OK).json(lessons)
+    res.status(StatusCodes.OK).json({ lessons, user })
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
   }

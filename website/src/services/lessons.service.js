@@ -12,7 +12,9 @@ const LessonsService = {
     return handleRequest('get', `/lessons/all?limit=${limit}&page=${page}`);
   },
   getLessonById: (id) => handleRequest('get', `/lessons/${id}`),
-  getLessonsByUserId: () => handleRequest('get', '/lessons/user')
+  getLessonsByUserId: () => handleRequest('get', '/lessons/user'),
+  getAllTopic: () => handleRequest('get', '/topics'),
+  create: (data) => handleRequest('post', '/lessons', data)
 };
 
 export default LessonsService;

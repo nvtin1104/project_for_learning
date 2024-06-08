@@ -27,7 +27,7 @@ const productSchema = yup.object().shape({
   type: yup.string().typeError('Type must be string').required('Type is required')
 });
 
-const AddProductForm = ({ handleGetContent, topic }) => {
+const AddProductForm = ({ handleGetContent, topic, status }) => {
   AddProductForm.propTypes = {
     handleGetContent: PropTypes.func,
     topic: PropTypes.array
@@ -45,15 +45,19 @@ const AddProductForm = ({ handleGetContent, topic }) => {
       if (selectedTopic === '' || selectedSubject === '') {
         handleToast('error', 'Please select topic and subject');
       } else {
-        const category = {
+        values.category = {
           topicId: selectedTopic,
           subject: selectedSubject
         };
-        values.category = category;
         handleGetContent(values);
       }
     }
   });
+  useEffect(() => {
+    if (status === 'success') {
+      formik.resetForm();
+    }
+  }, [status]);
   const [selectedTopic, setSelectedTopic] = React.useState('');
   const [subject, setSubject] = React.useState([]);
   const [selectedSubject, setSelectedSubject] = React.useState('');
@@ -198,7 +202,7 @@ const AddProductForm = ({ handleGetContent, topic }) => {
           )}
         </Stack>
 
-        <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="inherit">
+        <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="secondary">
           Save
         </LoadingButton>
       </form>

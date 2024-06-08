@@ -121,7 +121,7 @@ export default function ListView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Lessons</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<IconPlus stroke={2} />}>
+        <Button variant="contained" color="secondary" startIcon={<IconPlus stroke={2} />}>
           <Link style={{ textDecoration: 'none', color: 'inherit' }} to="add">
             New Lesson
           </Link>

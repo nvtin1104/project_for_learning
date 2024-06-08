@@ -14,6 +14,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { handleToast } from 'utils/toast';
 import PropTypes from 'prop-types';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -29,12 +30,12 @@ export default function AddQuestion({ handleAddQuestion }) {
   AddQuestion.propTypes = {
     handleAddQuestion: PropTypes.func
   };
-  const [otion, setOption] = React.useState([]);
+  const [option, setOption] = React.useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
     const value = Object.fromEntries(data.entries());
-    const newOption = otion.map((item) => (item.option === value.right ? { ...item, isCorrect: true } : item));
+    const newOption = option.map((item) => (item.option === value.right ? { ...item, isCorrect: true } : item));
     if (value.right === undefined) {
       handleToast('error', 'Right option is required');
     } else {
@@ -51,13 +52,13 @@ export default function AddQuestion({ handleAddQuestion }) {
     e.preventDefault();
     const data = new FormData(e.target);
     const value = Object.fromEntries(data.entries());
-    const fillter = otion.filter((item) => item.option === value.option);
+    const fillter = option.filter((item) => item.option === value.option);
     if (fillter.length > 0) {
       handleToast('error', 'Option is exist');
     } else if (value.option === '') {
       handleToast('error', 'Option is required');
     } else {
-      setOption([...otion, { option: value.option, isCorrect: false }]);
+      setOption([...option, { option: value.option, isCorrect: false }]);
     }
     handleClose();
   };
@@ -68,10 +69,10 @@ export default function AddQuestion({ handleAddQuestion }) {
           <Typography variant="h4">Add Question</Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} md={7}>
-              <TextField fullWidth label="Question" name="question" type="text" />
+              <TextField fullWidth label="Question name" name="question" type="text" />
             </Grid>
             <Grid item xs={12} md={4}>
-              <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="button" onClick={handleOpen} variant="contained" color="inherit">
+              <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="button" onClick={handleOpen} variant="contained" color="secondary">
                 Add Option
               </LoadingButton>
             </Grid>
@@ -79,14 +80,14 @@ export default function AddQuestion({ handleAddQuestion }) {
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Options</FormLabel>
             <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="right">
-              {otion.map((item, i) => (
+              {option.map((item, i) => (
                 <FormControlLabel key={i} value={item.option} control={<Radio />} label={item.option} />
               ))}
             </RadioGroup>
           </FormControl>
         </Stack>
 
-        <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="inherit">
+        <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="secondary">
           Add
         </LoadingButton>
       </form>
@@ -96,7 +97,7 @@ export default function AddQuestion({ handleAddQuestion }) {
             <Stack spacing={3}>
               <Typography variant="h4">Add Option</Typography>
               <TextField fullWidth label="Option" name="option" type="text" />
-              <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="inherit">
+              <LoadingButton sx={{ mt: 1 }} fullWidth size="large" type="submit" variant="contained" color="secondary">
                 Add
               </LoadingButton>
             </Stack>
