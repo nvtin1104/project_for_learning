@@ -20,7 +20,6 @@ const MenuList = () => {
       setMenuItems(clientItems);
     }
   }, [pathname]);
-  console.log(pathname.split('/'));
   const navItems = menuItems.items.map((item) => {
     switch (item.type) {
       case 'group':

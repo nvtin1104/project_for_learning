@@ -1,18 +1,18 @@
 import Container from '@mui/material/Container';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import BreadcrumbLesson from 'src/ui-component/breadcrumb/BreadcrumbLesson';
+import BreadcrumbLesson from 'ui-component/breadcrumb/BreadcrumbLesson';
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
-import RatingLesson from 'src/ui-component/rating/RationLesson';
-import ChipCategory from 'src/ui-component/chip/ChipCategory';
-import ChipIcon from 'src/ui-component/chip/ChipIcon';
+import RatingLesson from 'ui-component/rating/RationLesson';
+import ChipCategory from 'ui-component/chip/ChipCategory';
+import ChipIcon from 'ui-component/chip/ChipIcon';
 import { IconNotebook, IconCards } from '@tabler/icons-react';
 
-import RadioQuestion from 'src/ui-component/radio/RadioQuestion';
-import CardResult from 'src/ui-component/cards/CardResult';
+import RadioQuestion from 'ui-component/radio/RadioQuestion';
+import CardResult from 'ui-component/cards/CardResult';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleGetLessonsById } from 'src/store/slices/lessonsSlice';
-import { SET_MENU } from '../../../../store/actions';
+import { handleGetLessonsById } from 'store/slices/lessonsSlice';
+import { SET_MENU } from 'store/actions';
 
 export default function DetailView() {
   const [data, setData] = useState(null);
@@ -20,6 +20,7 @@ export default function DetailView() {
   const [answer, setAnswer] = useState([]);
   const [checkAnswer, setCheckAnswer] = useState(false);
   const { state } = useLocation();
+  const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
   const lesson = useSelector((state) => state.lessons.lesson);
@@ -54,14 +55,20 @@ export default function DetailView() {
     }
   }, [lesson, status]);
   const handleCheckAnswer = () => {
-    questions.forEach((element, index) => {
-      if (answer.find((item) => item.index === index)) {
-        element = answer.find((item) => item.index === index);
+    const updatedQuestions = questions.map((question, index) => {
+      const userAnswer = answer.find((item) => item.index === index);
+      if (userAnswer) {
+        // Assuming that the correct answer is stored in the 'correctAnswer' property of the question
+        question = userAnswer.newQuestion;
       }
+      return question;
     });
-    setQuestions(questions);
+    console.log(updatedQuestions);
+    setQuestions(updatedQuestions);
     setCheckAnswer(true);
-    // Log the data
+  };
+  const handleNavigate = (route) => {
+    navigate(route, { state: { data } });
   };
   const handleResetTest = () => {
     setCheckAnswer(false);
@@ -107,10 +114,16 @@ export default function DetailView() {
               margin: '16px 0'
             }}
           >
-            <Button variant="contained" color="secondary" startIcon={<IconCards />} size="large">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleNavigate('recording')}
+              startIcon={<IconCards />}
+              size="large"
+            >
               Recording Card
             </Button>
-            <Button variant="contained" color="secondary" startIcon={<IconNotebook />} size="large">
+            <Button variant="contained" color="secondary" onClick={() => handleNavigate('test')} startIcon={<IconNotebook />} size="large">
               Test
             </Button>
           </Stack>

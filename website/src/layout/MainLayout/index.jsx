@@ -89,6 +89,7 @@ const MainLayout = () => {
           dispatch(getCurrentUser());
         }
       } else {
+        handleToast('error', 'Token is invalid');
         navigate('/login');
       }
     } else {

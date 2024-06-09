@@ -8,42 +8,35 @@ import { Card, CardContent } from '@mui/material';
 import { PropTypes } from 'prop-types';
 
 export default function RadioQuestion({ question, index, handleAnswer }) {
-	RadioQuestion.propTypes = {
-		question: PropTypes.object,
-		handleAnswer: PropTypes.func,
-		index: PropTypes.number,
-	};
-	const [value, setValue] = React.useState(null);
-	const handleChange = (event) => {
-		setValue(event.target.value);
-		question.answer = event.target.value;
-		
-		question.options.find((option) => option.option === event.target.value).isCorrect ? question.checkAnswer = true : question.checkAnswer = false;
-		handleAnswer({question, index});
-	};
+  RadioQuestion.propTypes = {
+    question: PropTypes.object,
+    handleAnswer: PropTypes.func,
+    index: PropTypes.number
+  };
+  const [value, setValue] = React.useState(null);
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    const newQuestion = { ...question };
+    newQuestion.answer = event.target.value;
 
-	return (
-		<Card sx={{ minWidth: 275, pl: 2, m: '16px 0' }}>
-			<CardContent>
-				<FormControl>
-					<FormLabel id={`question-${index}`}>{question.question}</FormLabel>
-					<RadioGroup
-						aria-labelledby={`question-${index}`}
-						name={`question-${index}`}
-						value={value}
-						onChange={handleChange}
-					>
-						{question.options.map((option, index) => (
-							<FormControlLabel
-								key={index}
-								value={option.option}
-								control={<Radio />}
-								label={option.option}
-							/>
-						))}
-					</RadioGroup>
-				</FormControl>
-			</CardContent>
-		</Card>
-	);
+    newQuestion.options.find((option) => option.option === event.target.value).isCorrect
+      ? (newQuestion.checkAnswer = true)
+      : (newQuestion.checkAnswer = false);
+    handleAnswer({ newQuestion, index });
+  };
+
+  return (
+    <Card sx={{ minWidth: 275, pl: 2, m: '16px 0' }}>
+      <CardContent>
+        <FormControl>
+          <FormLabel id={`question-${index}`}>{question.question}</FormLabel>
+          <RadioGroup aria-labelledby={`question-${index}`} name={`question-${index}`} value={value} onChange={handleChange}>
+            {question.options.map((option, index) => (
+              <FormControlLabel key={index} value={option.option} control={<Radio />} label={option.option} />
+            ))}
+          </RadioGroup>
+        </FormControl>
+      </CardContent>
+    </Card>
+  );
 }
