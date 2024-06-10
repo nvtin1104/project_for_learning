@@ -28,6 +28,7 @@
     "@mui/material": "^5.15.10",
     "@mui/system": "^5.15.9",
     "@mui/utils": "^5.15.11",
+    "@mui/x-charts": "^7.6.2",
     "@reduxjs/toolkit": "^2.2.1",
     "@tabler/icons-react": "^2.47.0",
     "@vitejs/plugin-react": "^4.2.1",

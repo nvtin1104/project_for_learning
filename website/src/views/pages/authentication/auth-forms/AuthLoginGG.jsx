@@ -59,7 +59,7 @@ const AuthLoginGG = ({ matchDownSM, theme, handleDispatch, navigate }) => {
       handleToast('error', error.error);
       setSubmit(false);
     }
-  }, [status, error]);
+  }, [status, error, data]);
   return (
     <>
       {status === 'loading' && <Loader />}

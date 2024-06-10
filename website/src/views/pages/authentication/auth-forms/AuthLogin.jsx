@@ -47,13 +47,13 @@ const AuthLogin = ({ ...others }) => {
   const navigate = useNavigate();
   useEffect(() => {
     if (status === 'success' && localStorage.getItem('token') === null) {
-      handleToast('success', 'Login success full');
+      handleToast('success', 'Login successfully');
       localStorage.setItem('token', data.accssesToken);
       navigate('/', { state: { login: true } });
     } else if (status === 'failed') {
       handleToast('error', error.error);
     }
-  }, [status, error]);
+  }, [status, error, data]);
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
