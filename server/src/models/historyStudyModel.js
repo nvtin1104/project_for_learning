@@ -14,6 +14,16 @@ const historyStudySchema = Joi.object({
   createdAt: Joi.date().default(Date.now()),
   updatedAt: Joi.date().default(null)
 })
+const historyTestSchema = Joi.object({
+  name: Joi.string().min(3).max(100).required(),
+  lessonId: Joi.string().min(3).max(100).required(),
+  authId: Joi.string().min(3).max(100).required(),
+  time: Joi.number().min(1).max(3600).required(),
+  point: Joi.number().min(0).max(100).required(),
+  rightAnswer: Joi.number().min(0).max(60).required(),
+  wrongAnswer: Joi.number().min(0).max(60).required(),
+  createdAt: Joi.date().default(Date.now()),
+})
 const historyUpdateSchema = Joi.object({
   userId: Joi.string().min(3).max(100),
   lessonId: Joi.string().min(3).max(100),
@@ -32,11 +42,23 @@ const create = async (data) => {
     validData.lessonId = new ObjectId(validData.lessonId)
     const db = await GET_DB()
     const result = await db.collection('historyStudy').insertOne(validData)
-    const historyStudy = await db.collection('historyStudy').findOne({ _id: result.insertedId })
-    return historyStudy
+    return  await db.collection('historyStudy').findOne({ _id: result.insertedId })
   } catch (error) {
     throw new Error(error)
   }
+}
+const createHistoryTest = async (data) => {
+  try {
+    const validData = await historyTestSchema.validateAsync(data, { abortEarly: true })
+    validData.authId = new ObjectId(validData.authId)
+    validData.lessonId = new ObjectId(validData.lessonId)
+    const db = await GET_DB()
+    const result = await db.collection('historyTest').insertOne(validData)
+    return  await db.collection('historyTest').findOne({ _id: result.insertedId })
+  } catch (error) {
+    throw new Error(error)
+  }
+
 }
 const update = async (id, data) => {
   try {
@@ -83,5 +105,6 @@ export const HistoryStudyModel = {
   getCollectionById,
   getCollectionsById,
   update,
-  deleteHistoryStudy
+  deleteHistoryStudy,
+  createHistoryTest
 }

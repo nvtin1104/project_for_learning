@@ -6,6 +6,7 @@ import lessonsReducer from './slices/lessonsSlice';
 import searchReducer from './slices/searchSlice';
 import authReducer from './slices/authSlice';
 import userReducer from './slices/usersSlice';
+import historyReducer from './slices/historySlice';
 // ==============================|| COMBINE REDUCER ||============================== //
 
 const reducer = combineReducers({
@@ -13,7 +14,8 @@ const reducer = combineReducers({
   lessons: lessonsReducer,
   search: searchReducer,
   auth: authReducer,
-  user: userReducer
+  user: userReducer,
+  history: historyReducer
 });
 
 export default reducer;

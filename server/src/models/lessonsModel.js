@@ -98,8 +98,7 @@ const getAllLessons = async ({ limit, page }) => {
   try {
     const offset = limit * (page - 1);
     const db = await GET_DB();
-    const lessons = await db.collection('lessons').find().limit(Number(limit)).skip(offset).toArray();
-    return lessons;
+    return await db.collection('lessons').find().limit(Number(limit)).skip(offset).toArray();
   } catch (error) {
     throw new Error(error);
   }
@@ -107,8 +106,7 @@ const getAllLessons = async ({ limit, page }) => {
 const getLessonById = async (id) => {
   try {
     const db = await GET_DB();
-    const lesson = await db.collection('lessons').findOne({ _id: new ObjectId(id) });
-    return lesson;
+    return await db.collection('lessons').findOne({ _id: new ObjectId(id) });
   } catch (error) {
     throw new Error(error);
   }

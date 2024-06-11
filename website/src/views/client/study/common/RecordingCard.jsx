@@ -1,17 +1,19 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
-import { IconChevronRight, IconChevronLeft, IconCards } from '@tabler/icons-react';
+import { IconChevronRight, IconChevronLeft } from '@tabler/icons-react';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { handleSound } from '../../../../assets/sound';
+import { handleSound } from 'assets/sound';
+import { handleCreateHistoryTest } from 'store/slices/historySlice';
 
-const RecordingCard = ({ data, navigate }) => {
-  const { id } = useParams();
+const RecordingCard = ({ data, name, navigate, dispatch }) => {
+  const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
   const [current, setCurrent] = useState(0);
   const [questions, setQuestions] = useState(data.questions);
   const [isResult, setIsResult] = useState(false);
@@ -19,28 +21,28 @@ const RecordingCard = ({ data, navigate }) => {
   const handleAnswer = (value) => {
     updateQuestion(value);
   };
-  // const handleSound = () => {
-  //   wrongSound.play;
-  //   console.log(wrongSound.play);
-  // };
+
+  const handleAfterAnswer = (type) => {
+    handleSound(type);
+    if (current < questions.length - 1) {
+      setTimeout(() => {
+        setCurrent(current + 1);
+      }, 1000);
+    }
+  };
   const updateQuestion = (value) => {
     const newQuestion = { ...questions[current] };
     newQuestion.answer = value;
-
-    // const selectedOption = newQuestion.options.find((option) => option.option === value);
-    // if (selectedOption.isCorrect) {
-    //   correctSound.play(undefined, false);
-    // } else {
-    //   wrongSound.play();
-    // }
     newQuestion.options.find((option) => option.option === value).isCorrect
       ? (newQuestion.checkAnswer = true)
       : (newQuestion.checkAnswer = false);
+    newQuestion.options.find((option) => option.option === value).isCorrect ? handleAfterAnswer('correct') : handleAfterAnswer('wrong');
     const updatedQuestions = [...questions];
     updatedQuestions[current] = newQuestion;
     setQuestions(updatedQuestions);
   };
-  const handleResult = () => {
+  const handleResult = (time) => {
+    handleSound('success');
     let result = 0;
     questions.forEach((question) => {
       if (question.checkAnswer) {
@@ -49,22 +51,42 @@ const RecordingCard = ({ data, navigate }) => {
     });
     let point = (result / questions.length) * 100;
     setIsResult(true);
-    setResult({
+    const resultData = {
+      lessonId: data._id,
+      authId: data.authId,
+      name,
       point,
+      time: time,
       rightAnswer: result,
       wrongAnswer: questions.length - result
-    });
+    };
+    dispatch(handleCreateHistoryTest({ data: resultData }));
+    setResult(resultData);
   };
   const handleChangeCurrent = (value) => {
     setCurrent(value);
   };
 
+  useEffect(() => {
+    let interval;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+    } else {
+      handleResult(time);
+      if (interval) clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, time]);
+
   return (
     <Card
       sx={{
-        p: 3,
-        width: '100wh',
-        maxWidth: '100%'
+        width: '1200px',
+        height: '600px',
+        position: 'relative',
+        p: 3
       }}
     >
       {isResult ? (
@@ -76,6 +98,8 @@ const RecordingCard = ({ data, navigate }) => {
               {data.title}
             </Typography>
             <Stack direction="row" spacing={1} alignItems="center">
+              <Typography>Name: {name}</Typography>
+              <Typography>{time} s</Typography>
               <Typography>{`${current + 1}/${questions.length}`}</Typography>
               <IconButton aria-label="pre" disabled={current === 0} onClick={() => handleChangeCurrent(current - 1)}>
                 <IconChevronLeft />
@@ -86,17 +110,27 @@ const RecordingCard = ({ data, navigate }) => {
             </Stack>
           </Stack>
           {questions.length > 0 && <QuestionCard questions={questions} current={current} handleAnswer={handleAnswer} />}
-          <Button
-            variant="contained"
-            color="secondary"
+          <Stack
             sx={{
-              mt: 3
+              position: 'absolute',
+              bottom: 32,
+              right: 32
             }}
-            onClick={() => handleSound()}
-            size="large"
           >
-            End
-          </Button>
+            {current === questions.length - 1 && (
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  mt: 3
+                }}
+                onClick={() => setIsRunning(false)}
+                size="large"
+              >
+                End
+              </Button>
+            )}
+          </Stack>
         </>
       )}
     </Card>
@@ -174,15 +208,19 @@ const CardResult = ({ result, navigate }) => {
       <Card
         sx={{
           bgcolor: 'secondary.dark',
-          height: 80,
-          width: 80,
+          height: 120,
+          width: 180,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           m: '0 32px'
         }}
       >
-        <Typography color="white">Point: {result.point}</Typography>
+        <Stack>
+          <Typography color="white">Name: {result.name}</Typography>
+          <Typography color="white">Point: {result.point}</Typography>
+          <Typography color="white">Time: {result.time} s</Typography>
+        </Stack>
       </Card>
       <Button
         variant="contained"

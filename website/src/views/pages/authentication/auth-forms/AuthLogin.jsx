@@ -49,7 +49,9 @@ const AuthLogin = ({ ...others }) => {
     if (status === 'success') {
       handleToast('success', 'Login successfully');
       localStorage.setItem('token', data.accssesToken);
-      navigate('/', { state: { login: true } });
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
     } else if (status === 'failed') {
       handleToast('error', error.error);
     }

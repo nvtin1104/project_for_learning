@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { IconCards, IconNotebook, IconSearch } from '@tabler/icons-react';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Card } from '@mui/material';
-import RatingLesson from 'ui-component/rating/RationLesson';
-import ChipCategory from 'ui-component/chip/ChipCategory';
-import ChipIcon from 'ui-component/chip/ChipIcon';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Grid } from '@mui/material';
 import RecordingCard from './common/RecordingCard';
 
-const StartStudyPage = (props) => {
-  const dispatch = useDispatch();
+import LessonDetails from './common/LessonDetail';
+import { useDispatch } from 'react-redux';
+
+const StartStudyPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [data, setData] = useState(null);
   const [start, setStart] = useState(false);
   const { state } = useLocation();
+  const [name, setName] = useState('');
   useEffect(() => {
-    if (state) {
+    if (state && state.data) {
       setData(state.data);
     } else {
       navigate('/study');
     }
-  }, [state]);
+  }, [state, navigate]);
+
+  const handleStart = (name) => {
+    setName(name);
+    setStart(true);
+  };
 
   return (
-    <Stack
+    <Grid
       sx={{
         height: '100vh',
         bgcolor: 'secondary.dark',
@@ -35,56 +37,12 @@ const StartStudyPage = (props) => {
         color: 'inherit'
       }}
     >
-      <Stack spacing={2}>
-        {data !== null && !start && (
-          <Card
-            sx={{
-              p: 3
-            }}
-          >
-            <Typography
-              variant="h1"
-              component="h1"
-              sx={{
-                fontSize: '32px',
-                fontWeight: 600,
-                margin: '16px 0'
-              }}
-            >
-              {data.title}
-            </Typography>
-            <RatingLesson />
-            <Typography
-              variant="p"
-              component="p"
-              sx={{
-                fontSize: '16px',
-                margin: '16px 0'
-              }}
-            >
-              {data.description}
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <ChipCategory label={data.category.subject} />
-              <ChipCategory label={`${data.questions.length} question`} />
-              <ChipIcon label={data.auth} />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                margin: '16px 0'
-              }}
-            >
-              <Button variant="contained" color="secondary" onClick={() => setStart(true)} startIcon={<IconCards />} size="large">
-                Start Test
-              </Button>
-            </Stack>
-          </Card>
-        )}
-        {start && <RecordingCard data={data} navigate={navigate} />}
-      </Stack>
-    </Stack>
+      {data && !start ? (
+        <LessonDetails data={data} onStart={handleStart} />
+      ) : (
+        start && <RecordingCard name={name} data={data} navigate={navigate} dispatch={dispatch} />
+      )}
+    </Grid>
   );
 };
 
