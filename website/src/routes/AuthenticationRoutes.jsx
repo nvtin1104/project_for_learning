@@ -9,6 +9,8 @@ const AuthLogin3 = Loadable(lazy(() => import('views/pages/authentication3/Login
 const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication3/Register3')));
 const AuthForgotPassword = Loadable(lazy(() => import('views/pages/authentication3/ForgotPassword')));
 const StudyPage = Loadable(lazy(() => import('views/client/study/StudyPage')));
+const StudyStartPage = Loadable(lazy(() => import('views/client/study/StartStudyPage')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 const AuthenticationRoutes = {
@@ -22,6 +24,10 @@ const AuthenticationRoutes = {
     {
       path: '/study',
       element: <StudyPage />
+    },
+    {
+      path: '/study/start',
+      element: <StudyStartPage />
     },
     {
       path: '/register',

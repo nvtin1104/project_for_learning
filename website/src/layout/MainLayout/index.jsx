@@ -74,7 +74,7 @@ const MainLayout = () => {
   useEffect(() => {
     if (status === 'failed') {
       navigate('/login');
-      handleToast('error', error.error);
+      // handleToast('error', error.error);
     }
   }, [status, error]);
   useEffect(() => {
@@ -82,17 +82,12 @@ const MainLayout = () => {
       const jwtPattern = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
       return jwtPattern.test(token);
     };
-
-    if (token) {
-      if (isJWT(token)) {
-        if (user === null) {
-          dispatch(getCurrentUser());
-        }
-      } else {
-        handleToast('error', 'Token is invalid');
-        navigate('/login');
+    if (isJWT(token)) {
+      if (user === null) {
+        dispatch(getCurrentUser());
       }
     } else {
+      handleToast('error', 'Token is invalid');
       navigate('/login');
     }
   }, [token, navigate, user]);

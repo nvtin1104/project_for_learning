@@ -46,7 +46,7 @@ const AuthLogin = ({ ...others }) => {
   const [checked, setChecked] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    if (status === 'success' && localStorage.getItem('token') === null) {
+    if (status === 'success') {
       handleToast('success', 'Login successfully');
       localStorage.setItem('token', data.accssesToken);
       navigate('/', { state: { login: true } });
