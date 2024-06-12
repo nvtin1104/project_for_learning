@@ -10,6 +10,16 @@ const handleCreateHistoryTest = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message.replace('Error: ', '') })
   }
 }
+const handleGetHistory = async (req, res) => {
+  try {
+    const { id } = req.params
+    const history = await HistoryStudyModel.handleGetHistory(id, 'historyTest')
+    res.status(StatusCodes.OK).json(history)
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message.replace('Error: ', '') })
+  }
+}
 export const HistoryTestController = {
-  handleCreateHistoryTest
+  handleCreateHistoryTest,
+  handleGetHistory
 }

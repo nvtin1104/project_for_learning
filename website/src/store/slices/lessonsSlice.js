@@ -17,7 +17,7 @@ export const handleGetLessonsById = createAsyncThunk('search/lessonsById', ({ id
   handleRequest(LessonsService.getLessonById, id, thunkAPI)
 );
 export const handleDeleteLessonById = createAsyncThunk('lessons/deleteLessonById', ({ id }, thunkAPI) =>
-  handleRequest(LessonsService.getLessonById, id, thunkAPI)
+  handleRequest(LessonsService.delete, id, thunkAPI)
 );
 export const handleGetAllTopics = createAsyncThunk('lessons/getAllTopics', (_, thunkAPI) =>
   handleRequest(LessonsService.getAllTopic, {}, thunkAPI)
@@ -29,6 +29,7 @@ const lessonsSlice = createSlice({
   name: 'lessons',
   initialState: {
     data: null,
+    statusDel: 'idle',
     status: 'idle',
     statusGetByUserId: 'idle',
     statusTopics: 'idle',
@@ -112,14 +113,14 @@ const lessonsSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(handleDeleteLessonById.pending, (state) => {
-        state.status = 'loading';
+        state.statusDel = 'loading';
       })
       .addCase(handleDeleteLessonById.fulfilled, (state, action) => {
-        state.status = 'success';
-        state.lesson = action.payload;
+        state.statusDel = 'success';
+        state.dataDel = action.payload;
       })
       .addCase(handleDeleteLessonById.rejected, (state, action) => {
-        state.status = 'failed';
+        state.statusDel = 'failed';
         state.error = action.payload;
       });
   }

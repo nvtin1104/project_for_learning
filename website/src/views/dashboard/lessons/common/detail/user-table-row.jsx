@@ -16,7 +16,7 @@ import { useRouter } from 'routes/hooks';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({ selected, name, time, createdAt, point, id, handleClick, handleDelete }) {
+export default function UserTableRow({ selected, title, auth, createdAt, status, type, id, handleClick, handleDelete }) {
   const [open, setOpen] = useState(null);
   const route = useRouter();
   const handleOpenMenu = (event) => {
@@ -37,16 +37,19 @@ export default function UserTableRow({ selected, name, time, createdAt, point, i
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {title}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{point}</TableCell>
+        <TableCell>{auth}</TableCell>
 
         <TableCell align="center">{createdDate}</TableCell>
 
-        <TableCell>{time} s</TableCell>
+        <TableCell>
+          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+        </TableCell>
+        <TableCell>{type.toLocaleUpperCase()}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <IconDotsVertical stroke={2} />
@@ -85,12 +88,13 @@ export default function UserTableRow({ selected, name, time, createdAt, point, i
 }
 
 UserTableRow.propTypes = {
-  time: PropTypes.any,
+  auth: PropTypes.any,
   handleClick: PropTypes.func,
   createdAt: PropTypes.any,
   id: PropTypes.any,
-  name: PropTypes.any,
+  title: PropTypes.any,
   selected: PropTypes.any,
-  point: PropTypes.string,
+  status: PropTypes.string,
+  type: PropTypes.string,
   handleDelete: PropTypes.func
 };

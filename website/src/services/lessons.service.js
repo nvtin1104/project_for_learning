@@ -14,7 +14,8 @@ const LessonsService = {
   getLessonById: (id) => handleRequest('get', `/lessons/${id}`),
   getLessonsByUserId: () => handleRequest('get', '/lessons/user'),
   getAllTopic: () => handleRequest('get', '/topics'),
-  create: (data) => handleRequest('post', '/lessons', data)
+  create: (data) => handleRequest('post', '/lessons', data),
+  delete: (id) => handleRequest('delete', `/lessons/${id}`)
 };
 
 export default LessonsService;

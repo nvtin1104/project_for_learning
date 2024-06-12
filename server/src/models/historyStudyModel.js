@@ -100,11 +100,21 @@ const deleteHistoryStudy = async (id) => {
     throw new Error(error)
   }
 }
+const handleGetHistory = async (id, collection) => {
+  try {
+    const db = await GET_DB()
+    return  await db.collection(collection).find({ lessonId: new ObjectId(id)}).toArray()
+  }
+  catch (error) {
+    throw new Error(error)
+  }
+}
 export const HistoryStudyModel = {
   create,
   getCollectionById,
   getCollectionsById,
   update,
   deleteHistoryStudy,
-  createHistoryTest
+  createHistoryTest,
+  handleGetHistory
 }
