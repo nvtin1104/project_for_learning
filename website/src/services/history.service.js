@@ -6,7 +6,8 @@ async function handleRequest(method, url, data) {
 
 const HistoryService = {
   createTest: ({ data }) => handleRequest('post', '/history-test', data),
-  getTest: ({ id }) => handleRequest('get', `/history-test/${id}`)
+  getTest: ({ id }) => handleRequest('get', `/history-test/${id}`),
+  getDashboard: () => handleRequest('get', '/dashboard/user')
 };
 
 export default HistoryService;

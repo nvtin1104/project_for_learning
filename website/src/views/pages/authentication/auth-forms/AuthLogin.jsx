@@ -53,7 +53,7 @@ const AuthLogin = ({ ...others }) => {
         navigate('/');
       }, 1000);
     } else if (status === 'failed') {
-      handleToast('error', error.error);
+      handleToast('error', ' error.error');
     }
   }, [status, error, data]);
 
@@ -65,7 +65,7 @@ const AuthLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  const handleSubmit = (values, { setErrors, setStatus }) => {
+  const handleSubmit = (values) => {
     dispatch(login(values));
   };
   return (

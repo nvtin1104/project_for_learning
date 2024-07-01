@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -19,6 +19,7 @@ import { gridSpacing } from 'store/constant';
 
 // chart data
 import chartData from './chart-data/total-growth-bar-chart';
+import { useSelector } from 'react-redux';
 
 const status = [
   {
@@ -44,12 +45,39 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const { primary } = theme.palette.text;
   const divider = theme.palette.divider;
   const grey500 = theme.palette.grey[500];
-
+  const dashboard = useSelector((state) => state.history.dashboard);
   const primary200 = theme.palette.primary[200];
   const primaryDark = theme.palette.primary.dark;
   const secondaryMain = theme.palette.secondary.main;
   const secondaryLight = theme.palette.secondary.light;
+  useEffect(() => {
+    const countByMonth = {};
 
+    // Initialize countByMonth with all months from "01" to "12"
+    for (let i = 1; i <= 12; i++) {
+      const month = i.toString().padStart(2, '0');
+      countByMonth[month] = 0;
+    }
+
+    // Duyệt qua danh sách các bản ghi và đếm số lượng người dùng theo tháng
+    dashboard.forEach((record) => {
+      const createdAt = new Date(record.createdAt);
+      const month = (createdAt.getMonth() + 1).toString().padStart(2, '0');
+      countByMonth[month] += 1;
+    });
+
+    // Convert countByMonth to an array, ensuring months are in order
+    const countArray = Object.keys(countByMonth)
+      .sort()
+      .map((month) => countByMonth[month]);
+    chartData.series = [
+      {
+        name: 'Student',
+        data: countArray
+      }
+    ];
+    console.log(chartData);
+  }, [dashboard]);
   React.useEffect(() => {
     const newChartData = {
       ...chartData.options,

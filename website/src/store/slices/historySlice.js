@@ -15,15 +15,19 @@ export const handleCreateHistoryTest = createAsyncThunk('history/test', ({ data 
 export const handleGetHistoryTest = createAsyncThunk('history/listTest', ({ id }, thunkAPI) =>
   handleRequest(HistoryService.getTest, { id }, thunkAPI)
 );
+export const handleGetDashboard = createAsyncThunk('history/dashboard', (_, thunkAPI) =>
+  handleRequest(HistoryService.getDashboard, null, thunkAPI)
+);
 
 const historySlice = createSlice({
   name: 'history',
-  initialState: { data: null, status: 'idle', error: null, listTest: null },
+  initialState: { data: null, status: 'idle', error: null, listTest: null, dashboard: null },
   reducers: {
     resetState: (state) => {
       state.error = null;
       state.status = 'idle';
       state.data = null;
+      state.dashboard = null;
     },
     resetStatus: (state) => {
       state.status = null;
@@ -40,6 +44,17 @@ const historySlice = createSlice({
       })
       .addCase(handleCreateHistoryTest.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(handleGetDashboard.pending, (state) => {
+        state.statusDashboard = 'loading';
+      })
+      .addCase(handleGetDashboard.fulfilled, (state, action) => {
+        state.statusDashboard = 'success';
+        state.dashboard = action.payload;
+      })
+      .addCase(handleGetDashboard.rejected, (state, action) => {
+        state.statusDashboard = 'failed';
         state.error = action.payload;
       })
       .addCase(handleGetHistoryTest.pending, (state) => {

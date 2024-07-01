@@ -6,6 +6,7 @@ import { APIHistoryStudy } from './historyStudy.route'
 import { APITopic } from './topics.route'
 import { APISearch } from './search.route'
 import { APIHistoryTest } from '~/routes/historyTest.route';
+import { APIDashboard } from '~/routes/dashboard.route';
 const Router = require('express').Router()
 Router.get('/status', async (req, res) => {
   res.status(StatusCodes.OK).json({
@@ -18,6 +19,7 @@ Router.use('/auth', APIAuth)
 Router.use('/lessons', APILessons)
 Router.use('/history-study', APIHistoryStudy)
 Router.use('/topics', APITopic)
+Router.use('/dashboard', APIDashboard)
 Router.use('/search', APISearch)
 Router.use('/history-test', APIHistoryTest)
 export const APIs = Router
